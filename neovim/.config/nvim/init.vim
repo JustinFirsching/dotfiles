@@ -6,7 +6,7 @@ filetype plugin indent on
 set autoindent
 set clipboard+=unnamedplus
 set colorcolumn=80
-set completeopt=menuone,noinsert
+set completeopt=menuone,noinsert,noselect
 set expandtab
 set hidden
 set incsearch
@@ -40,14 +40,13 @@ Plug 'mbbill/undotree' " Undo History
 Plug 'nvim-lua/popup.nvim' " Telescope Dependency
 Plug 'nvim-lua/plenary.nvim' " Telescope Dependency
 Plug 'nvim-telescope/telescope.nvim' " File Finder + Code Navigator
-Plug 'lervag/vimtex' " LaTeX
 call plug#end()
 " End Plugins
 
 " Autocomplete Language Servers
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 " Python
-lua require'lspconfig'.pyls.setup{ on_attach=require'completion'.on_attach }
+lua require'lspconfig'.pylsp.setup{ on_attach=require'completion'.on_attach }
 " Clang (C/C++)
 lua require'lspconfig'.clangd.setup{ on_attach=require'completion'.on_attach }
 " Java
@@ -57,10 +56,6 @@ lua require'lspconfig'.tsserver.setup{ on_attach=require'completion'.on_attach }
 " For more language servers
 " https://github.com/neovim/nvim-lspconfig#configurations
 " End Autocomplete Language Servers
-
-" LaTeX Settings
-let g:tex_flavor = "latex"
-" End LaTeX Settings
 
 " Custom Mappings
 " " Control-C to Escape
