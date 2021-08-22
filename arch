@@ -1,0 +1,7 @@
+#!/bin/sh
+
+DOTFILES="bash i3 neovim picom polybar st zsh"
+
+for dotfile in $DOTFILES; do
+    echo stow -t ~ $(basename -- $dotfile)
+done
