@@ -63,7 +63,7 @@ inoremap <C-c> <esc>
 " " Undo Menu
 nnoremap <leader>u :UndotreeShow<CR>
 " " File Finder
-nnoremap <leader>rf <cmd>Telescope find_files find_command=rg,--hidden,--files<cr>
+nnoremap <leader>rf <cmd>Telescope find_files hidden=true<cr>
 " " Buffer Reader
 nnoremap <leader>rb <cmd>Telescope buffers<cr>
 " " Old File Reader
