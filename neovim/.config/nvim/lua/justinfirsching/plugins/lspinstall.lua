@@ -1,16 +1,22 @@
 local lspinstall = require('lspinstall')
 
 local languages = {
-    'java',
     'bash',
+    'cpp',
+    'css',
     'dockerfile',
+    'go',
+    'html',
+    'java',
+    'json',
+    'kotlin',
+    'latex',
     'lua',
     'python',
     'rust',
-    'json',
+    'tailwindcss',
     'typescript',
-    'css',
-    'html',
+    'yaml',
 }
 
 local install_servers = function()

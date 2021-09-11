@@ -6,22 +6,8 @@ if fn.empty(fn.glob(install_path)) > 0 then
   vim.cmd 'packadd packer.nvim'
 end
 
-vim.cmd [[packadd packer.nvim]]
-vim.cmd [[packadd vimball]]
-
 return require('packer').startup(function()
   use 'wbthomason/packer.nvim' -- Package Manager
-  use 'itchyny/lightline.vim' -- Aesthetic bar
-  use {'morhetz/gruvbox', as = 'gruvbox'} -- Aesthetic theme
-  use 'neovim/nvim-lspconfig' -- Autocomplete Language Servers
-  use 'nvim-lua/completion-nvim' -- Autocomplete
-  use 'sheerun/vim-polyglot' -- Language syntax
-  use 'tpope/vim-fugitive' -- Git Integration
-  use 'mhinz/vim-signify' -- Git Indicate Line Changes
-  use 'mbbill/undotree' -- Undo History
-  use 'nvim-lua/popup.nvim' -- Telescope Dependency
-  use 'nvim-lua/plenary.nvim' -- Telescope Dependency
-  use 'nvim-telescope/telescope.nvim' -- File Finder + Code Navigator
   -- LSP
   use {
       'kabouzeid/nvim-lspinstall',
@@ -35,4 +21,15 @@ return require('packer').startup(function()
           },
       },
   }
+  use 'itchyny/lightline.vim' -- Aesthetic bar
+  use {'morhetz/gruvbox', as = 'gruvbox'} -- Aesthetic theme
+  use 'neovim/nvim-lspconfig' -- Autocomplete Language Servers
+  use 'nvim-lua/completion-nvim' -- Autocomplete
+  use 'sheerun/vim-polyglot' -- Language syntax
+  use 'tpope/vim-fugitive' -- Git Integration
+  use 'mhinz/vim-signify' -- Git Indicate Line Changes
+  use 'mbbill/undotree' -- Undo History
+  use 'nvim-lua/popup.nvim' -- Telescope Dependency
+  use 'nvim-lua/plenary.nvim' -- Telescope Dependency
+  use 'nvim-telescope/telescope.nvim' -- File Finder + Code Navigator
 end)

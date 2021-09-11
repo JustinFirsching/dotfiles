@@ -1,2 +1,2 @@
-require('justinfirsching.general')
 require('justinfirsching.plugins')
+require('justinfirsching.general')
