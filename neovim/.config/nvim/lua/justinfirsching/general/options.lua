@@ -1,7 +1,6 @@
 vim.opt.autoindent = true
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.colorcolumn = '80'
-vim.opt.completeopt = 'menuone,noinsert,noselect'
 vim.opt.expandtab = true
 vim.opt.hidden = true
 vim.opt.incsearch = true
