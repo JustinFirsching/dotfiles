@@ -25,7 +25,15 @@ local function setup_servers()
   lspinstall.setup()
   local servers = lspinstall.installed_servers()
   for _, server in pairs(servers) do
-    lspconfig[server].setup{ on_attach = on_attach }
+    require'lspconfig'[server].setup{
+      on_attach = on_attach,
+      flags = {
+        debounce_text_changes = 150,
+      },
+      capabilities = require('cmp_nvim_lsp').update_capabilities(
+        vim.lsp.protocol.make_client_capabilities()
+      )
+    }
   end
 end
 
