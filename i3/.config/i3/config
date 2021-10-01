@@ -10,7 +10,7 @@
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
 # Alt Key
-set $alt Mod1  
+set $alt Mod1
 # Win Key
 set $win Mod4
 
@@ -67,23 +67,11 @@ bindsym $alt+j focus down
 bindsym $alt+k focus up
 bindsym $alt+l focus right
 
-# winernatively, you can use the cursor keys:
-bindsym $alt+Left focus left
-bindsym $alt+Down focus down
-bindsym $alt+Up focus up
-bindsym $alt+Right focus right
-
 # move focused window
 bindsym $alt+Shift+h move left
 bindsym $alt+Shift+j move down
 bindsym $alt+Shift+k move up
 bindsym $alt+Shift+l move right
-
-# winernatively, you can use the cursor keys:
-bindsym $alt+Shift+Left move left
-bindsym $alt+Shift+Down move down
-bindsym $alt+Shift+Up move up
-bindsym $alt+Shift+Right move right
 
 # split in horizontal orientation
 bindsym $alt+b split h
@@ -219,7 +207,7 @@ gaps outer 10
 gaps inner 10
 
 # polybar
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec_always --no-startup-id sh $HOME/.config/polybar/launch.sh
 
 # screen brightness
 bindsym XF86MonBrightnessUp exec xbacklight -inc 5 # increase screen brightness
