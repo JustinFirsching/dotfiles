@@ -1,3 +1,6 @@
+-- Just to hide LSP errors...
+local vim = vim
+
 vim.opt.autoindent = true
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.colorcolumn = '80'
@@ -19,3 +22,4 @@ vim.opt.undofile = true
 vim.opt.updatetime = 50
 vim.opt.laststatus = 2
 vim.opt.showmode = false
+vim.opt.hlsearch = false

@@ -24,19 +24,33 @@ return require('packer').startup(function()
       },
     },
   }
-  -- Autocompletion plugin
+  -- Java LSP
+  use 'mfussenegger/nvim-jdtls'
+  -- Snippets
+  use {
+      'L3MON4D3/LuaSnip',
+      requires = {
+          { 'rafamadriz/friendly-snippets' }
+      },
+  }
+  -- Autocompletion plugins
   use {
     'hrsh7th/nvim-cmp',
     config = function() require('justinfirsching.plugins.cmp') end,
     requires = {
-      'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
+      'hrsh7th/cmp-nvim-lsp', -- LSP source for nvim-cmp
+      'hrsh7th/cmp-buffer', -- Buffer source for nvim-cmp
+      'saadparwaiz1/cmp_luasnip' -- Snippet source for nvim-cmp
     },
   }
-  use 'sheerun/vim-polyglot' -- Language syntax
+  use 'sheerun/vim-polyglot' -- Syntax Highlighting
   use 'tpope/vim-fugitive' -- Git Integration
   use 'mhinz/vim-signify' -- Git Indicate Line Changes
   use 'mbbill/undotree' -- Undo History
-  use 'nvim-lua/popup.nvim' -- Telescope Dependency
-  use 'nvim-lua/plenary.nvim' -- Telescope Dependency
-  use 'nvim-telescope/telescope.nvim' -- File Finder + Code Navigator
+  -- File Finder + Code Navigation
+  use {
+    'nvim-telescope/telescope.nvim',
+    requires = { {'nvim-lua/plenary.nvim'} }
+  }
+
 end)
