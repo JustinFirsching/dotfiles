@@ -3,11 +3,6 @@
 zstyle ':completion:*' completer _complete _ignored _approximate
 zstyle :compinstall filename '/home/justin/.zshrc'
 
-function zle-line-init () { echoti smkx }
-function zle-line-finish () { echoti rmkx }
-zle -N zle-line-init
-zle -N zle-line-finish
-
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall

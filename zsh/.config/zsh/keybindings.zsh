@@ -1,21 +1,24 @@
-# Use vim keybinds
-bindkey -v
+if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
+    function zle-line-init() {
+        echoti smkx
+    }
+    function zle-line-finish() {
+        echoti rmkx
+    }
+    zle -N zle-line-init
+    zle -N zle-line-finish
+fi
+
+typeset -A key
 
 bindkey "" beginning-of-line                      # Ctrl+A
 bindkey "" end-of-line                            # Ctrl+E
-bindkey "^[[H" beginning-of-line                    # Home key
-bindkey "^[[F" end-of-line                          # End key
-bindkey "\e[3~" delete-char                         # Delete Key
+bindkey "${terminfo[khome]}" beginning-of-line      # Home key
+bindkey "${terminfo[kend]}" end-of-line             # End key
+bindkey "${terminfo[kdch1]}" delete-char            # Delete Key
 bindkey "^[[1;5C" forward-word                      # Ctrl+Right
 bindkey "^[[1;5D" backward-word                     # Ctrl+Right
-bindkey "^[[3;5~" kill-word                         # Ctrl+Delete
 bindkey "^[[3;5~" kill-word                         # Ctrl+Delete
 bindkey "" backward-kill-word                     # Ctrl+Backspace
 bindkey '^R' history-incremental-search-backward    # Ctrl+R
 
-
-# Remove all Escape commands
-bindkey -rM viins '^['
-
-# Use this when I get used to Escape commands to avoid reaching for Escape
-# bindkey "^F" vi-cmd-mode
