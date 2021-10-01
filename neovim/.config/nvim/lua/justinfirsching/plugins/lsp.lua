@@ -10,6 +10,7 @@ local on_attach = function(client, bufnr)
   local opts = { noremap=true, silent=true }
 
   -- Code Navigation
+  buf_set_keymap('<leader>vD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('<leader>vd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
   buf_set_keymap('<leader>vi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('<leader>vsh', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
@@ -25,7 +26,7 @@ local function setup_servers()
   lspinstall.setup()
   local servers = lspinstall.installed_servers()
   for _, server in pairs(servers) do
-    require'lspconfig'[server].setup{
+    lspconfig[server].setup{
       on_attach = on_attach,
       flags = {
         debounce_text_changes = 150,
