@@ -16,7 +16,7 @@ cmp.setup {
       vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, true, true), 'n')
     end,
     ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
+      behavior = cmp.ConfirmBehavior.Insert,
       select = true,
     },
     ['<Tab>'] = function(fallback)
