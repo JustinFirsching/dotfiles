@@ -2,7 +2,7 @@ local has_lsp, lspconfig = pcall(require, 'lspconfig')
 if not has_lsp then
     return
 end
-local lspinstall = require'lspinstall'
+local lsp_installer = require('nvim-lsp-installer')
 
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, 'n', ...) end
@@ -22,26 +22,13 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('<leader>vn', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
 end
 
-local function setup_servers()
-  lspinstall.setup()
-  local servers = lspinstall.installed_servers()
-  for _, server in pairs(servers) do
-    lspconfig[server].setup{
+lsp_installer.on_server_ready(function(server)
+  server:setup({
       on_attach = on_attach,
       flags = {
         debounce_text_changes = 150,
       },
-      capabilities = require('cmp_nvim_lsp').update_capabilities(
-        vim.lsp.protocol.make_client_capabilities()
-      )
-    }
-  end
-end
-
-setup_servers()
-
--- Automatically reload after `:LspInstall <server>` so we don't have to restart neovim
-lspinstall.post_install_hook = function ()
-  setup_servers() -- reload installed servers
-  vim.cmd("bufdo e") -- this triggers the FileType autocmd that starts the server
-end
+      capabilities = vim.lsp.protocol.make_client_capabilities()
+    })
+  vim.cmd [[ do User LspAttachBuffers ]]
+end)
