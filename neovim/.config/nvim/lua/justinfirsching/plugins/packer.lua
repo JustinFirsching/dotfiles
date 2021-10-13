@@ -13,7 +13,7 @@ return require('packer').startup(function()
   use 'neovim/nvim-lspconfig' -- Language Servers
   -- LSP install
   use {
-    'kabouzeid/nvim-lspinstall',
+    'williamboman/nvim-lsp-installer',
     run = function()
       require('justinfirsching.plugins.lspinstall').install_servers()
     end,
