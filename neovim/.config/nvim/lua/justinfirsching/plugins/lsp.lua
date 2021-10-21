@@ -9,7 +9,6 @@ local on_attach = function(client, bufnr)
 
   local opts = { noremap=true, silent=true }
 
-  -- Code Navigation
   buf_set_keymap('<leader>vD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('<leader>vd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
   buf_set_keymap('<leader>vi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
@@ -18,8 +17,9 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('<leader>vrn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('<leader>vh', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('<leader>vca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('<leader>vsd', '<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('<leader>vsd', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   buf_set_keymap('<leader>vn', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('<leader>vp', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
 end
 
 lsp_installer.on_server_ready(function(server)
