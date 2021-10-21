@@ -21,6 +21,6 @@ bind('n', '<leader>rb', '<cmd>Telescope buffers<CR>')
 -- Old File Reader
 bind('n', '<leader>ro', '<cmd>Telescope oldfiles<CR>')
 -- Project Search
-bind('n', '<leader>ps', '<cmd>lua require("telescope.builtin").grep_string({ search = vim.fn.input("Grep Input> ") })<CR>')
+bind('n', '<leader>ps', '<cmd>lua require("telescope.builtin").live_grep()<CR>')
 
 return bind
