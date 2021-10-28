@@ -19,6 +19,5 @@ bindkey "${terminfo[kdch1]}" delete-char            # Delete Key
 bindkey "^[[1;5C" forward-word                      # Ctrl+Right
 bindkey "^[[1;5D" backward-word                     # Ctrl+Right
 bindkey "^[[3;5~" kill-word                         # Ctrl+Delete
-bindkey "" backward-kill-word                     # Ctrl+Backspace
 bindkey '^R' history-incremental-search-backward    # Ctrl+R
 
