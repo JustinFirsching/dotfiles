@@ -11,6 +11,7 @@ vim.g.mapleader = " "
 
 -- Exit Insert Mode
 bind_buf('i', '<C-c>', '<Esc>')
+bind('i', '<C-c>', '<Esc>')
 
 -- Undo Menu
 bind('n', '<leader>u', '<cmd>UndotreeShow<CR>')
