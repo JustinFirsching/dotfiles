@@ -50,7 +50,10 @@ return require('packer').startup(function()
   -- File Finder + Code Navigation
   use {
     'nvim-telescope/telescope.nvim',
-    requires = { {'nvim-lua/plenary.nvim'} }
+    requires = {
+      { 'nvim-lua/plenary.nvim' },
+      { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+    }
   }
 
 end)
