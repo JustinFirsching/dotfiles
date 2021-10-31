@@ -9,3 +9,6 @@ require('justinfirsching.plugins.autocomplete')
 
 -- Configure Autocommands
 require('justinfirsching.plugins.autocmds')
+
+-- Telescope
+require('justinfirsching.plugins.telescope')

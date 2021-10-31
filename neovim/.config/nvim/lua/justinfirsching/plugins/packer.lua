@@ -52,7 +52,11 @@ return require('packer').startup(function()
     'nvim-telescope/telescope.nvim',
     requires = {
       { 'nvim-lua/plenary.nvim' },
-      { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+      {
+        'nvim-treesitter/nvim-treesitter',
+        run = ':TSUpdate',
+        config = function() require('justinfirsching.plugins.treesitter') end,
+      }
     }
   }
 
