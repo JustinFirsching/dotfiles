@@ -1,0 +1,37 @@
+#!/bin/sh
+# For best usage of this script, execute it with `source tmux-loop`, or
+# handle the exit code to close the host shell (ex. `tmux-loop || exit`)
+
+case $TTY in
+    /dev/tty[1-9]) console=true;;
+                *) console=false;;
+esac
+
+# If we aren't in a console or tmux session, and have tmux attach to the "main"
+# tmux session. Continue reattaching to the main session unless we manually
+# disconnect from it with C-b + d, in which case drop to the terminal shell, or
+# disconnect from it by killing the shell in tmux, in which case kill the
+# terminal too.
+if [ "$console" = false ] && [ -z "$TMUX" ] && [ ! -z $(which tmux) ]; then
+    while true; do
+        # Create/attach to main
+        tmux new-session -A -s main >/dev/null
+
+        # Check if we manually detatched (C-b + d)
+        tmux show-environment -g MANUAL_DETACH >/dev/null 2>&1
+        manual_detach_set=$?
+        # Reset it so that it is accurate next time
+        tmux set-environment -gu MANUAL_DETACH 2>/dev/null
+
+        # Extract the name of the session we detached from
+        last_session=$(tmux show-environment -g LAST_TMUX_SESSION 2>/dev/null | sed 's|.*=\(.*\)|\1|')
+
+        # If TMUX is dead or we just left main
+        if [ -z "$last_session" ] || [ "$last_session" = "main" ]; then
+            # Break if we did so with C-b d
+            [ $manual_detach_set -eq 0 ] && break
+            # Otherwise exit
+            exit
+        fi
+    done
+fi

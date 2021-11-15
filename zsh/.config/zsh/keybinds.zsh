@@ -11,8 +11,8 @@ fi
 
 typeset -A key
 
-bindkey "" beginning-of-line                      # Ctrl+A
-bindkey "" end-of-line                            # Ctrl+E
+bindkey "^A" beginning-of-line                      # Ctrl+A
+bindkey "^E" end-of-line                            # Ctrl+E
 bindkey "${terminfo[khome]}" beginning-of-line      # Home key
 bindkey "${terminfo[kend]}" end-of-line             # End key
 bindkey "${terminfo[kdch1]}" delete-char            # Delete Key
@@ -20,4 +20,4 @@ bindkey "^[[1;5C" forward-word                      # Ctrl+Right
 bindkey "^[[1;5D" backward-word                     # Ctrl+Right
 bindkey "^[[3;5~" kill-word                         # Ctrl+Delete
 bindkey '^R' history-incremental-search-backward    # Ctrl+R
-
+bindkey "^Ba" attach-tmux-main                      # Ctrl+B a

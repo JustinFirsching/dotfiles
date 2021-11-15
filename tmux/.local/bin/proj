@@ -1,0 +1,44 @@
+#!/bin/sh
+
+if [ $# -gt 0 ]; then
+    src_dirs=$@
+else
+    src_dirs="$HOME/src/"
+fi
+
+project_dirs=$(find $src_dirs -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort)
+if [ -z "$project_dirs" ]; then
+    >&2 echo No projects found! Project directories searched: "$src_dirs"
+    exit 1
+fi
+
+selected=$(echo "$project_dirs" | fzf --filepath-word)
+if [ -z "$selected" ]; then
+    # This must mean that no project was selected
+    exit 0
+fi
+
+# Use the directory name as the project name
+proj_name=$(basename -- $selected)
+
+# This sed replaces each directory with the first letter of its name.
+# What are the odds we have two projects with the same name that we want
+# different windows for? Low. What are the odds if we account for it now? 0
+if [ $(find $src_dirs -mindepth 1 -maxdepth 1 -type d -exec basename -- {} \; | grep -cw $proj_name) -gt 1 ]; then
+    short_path=$(echo $selected | sed 's#\(.\)[^/]*/#\1/#g')
+    session_name=$short_path
+else
+    session_name=$proj_name
+fi
+
+# If there isn't a session yet, make one
+if ! tmux has-session -t $session_name 2>/dev/null; then
+    tmux new-session -d -s $session_name -c $selected
+fi
+
+# If we are in TMUX now
+if [ -z $TMUX ]; then
+    tmux attach-session -t $session_name
+else
+    tmux switch-client -t $session_name
+fi
