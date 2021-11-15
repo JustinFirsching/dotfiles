@@ -5,6 +5,8 @@ export SHELL=zsh
 
 export PS1="%n@%M:%c$ "
 
+export GPG_TTY=$TTY
+
 PATH=${PATH}:$HOME/.local/bin
 export PATH
 
