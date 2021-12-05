@@ -1,10 +1,35 @@
 local has_lsp, lspconfig = pcall(require, 'lspconfig')
 if not has_lsp then
-    return
+    return nil
 end
 local lsp_installer = require('nvim-lsp-installer')
+local installer_servers = require('nvim-lsp-installer.servers')
 
-local on_attach = function(client, bufnr)
+local M = {}
+
+M.servers = {
+    'ansiblels',
+    'bashls',
+    'clangd',
+    'cmake',
+    'cssls',
+    'dockerls',
+    'gopls',
+    'html',
+    'jdtls',
+    'jsonls',
+    'kotlin_language_server',
+    'texlab',
+    'sumneko_lua',
+    'pylsp',
+    'rust_analyzer',
+    'sqlls',
+    'tailwindcss',
+    'tsserver',
+    'yamlls',
+}
+
+local on_attach = function(_, bufnr)
   local opts = { noremap=true, silent=true }
   local buf_set_keymap = function(key, func) vim.api.nvim_buf_set_keymap(bufnr, 'n', key, func, opts) end
   buf_set_keymap('<leader>vca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
@@ -34,12 +59,38 @@ local on_attach = function(client, bufnr)
 end
 
 lsp_installer.on_server_ready(function(server)
-  server:setup({
-      on_attach = on_attach,
-      flags = {
-        debounce_text_changes = 150,
-      },
-      capabilities = vim.lsp.protocol.make_client_capabilities()
-    })
+  local config = {
+    on_attach = on_attach,
+    flags = {
+      debounce_text_changes = 150,
+    },
+    capabilities = vim.lsp.protocol.make_client_capabilities()
+  }
+  server:setup(config)
   vim.cmd [[ do User LspAttachBuffers ]]
 end)
+
+M.install = function(install_targets)
+    local install_servers = install_targets or M.servers
+    -- If in headless mode, run blocking
+    if #(vim.api.nvim_list_uis()) == 0 then
+        lsp_installer.install_sync(install_servers)
+    else
+        for _, servername in ipairs(install_servers) do
+            lsp_installer.install(servername)
+        end
+    end
+end
+
+M.install_missing = function()
+    local missing = {}
+    for _, server_name in ipairs(M.servers) do
+        local ok, server = installer_servers.get_server(server_name)
+        if ok and not server:is_installed() then
+              table.insert(missing, server.name)
+        end
+    end
+    M.install(missing)
+end
+
+return M
