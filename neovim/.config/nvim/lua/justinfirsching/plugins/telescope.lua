@@ -38,16 +38,44 @@ local create_new_file = function(prompt_bufnr)
   end
 end
 
+local delete_file = function(prompt_bufnr)
+    local function delete_up(path)
+        if path:is_dir() then
+            local dir_was_empty, _ = pcall(function(p)
+                Path:new(p):rmdir()
+            end, path:absolute())
+            -- If the directory wasn't empty, stop recursing
+            if not dir_was_empty then return end
+        else
+            path:rm()
+        end
+
+        local parent = path:parent()
+        delete_up(parent)
+    end
+
+    local picker = action_state.get_current_picker(prompt_bufnr)
+    local file = picker:get_selection()
+    if file == "" then
+        return
+    end
+
+    actions.close(prompt_bufnr)
+    delete_up(Path:new(file))
+end
+
 require('telescope').setup{
   defaults = {
     mappings = {
       i = {
-        ["<C-e>"] = create_new_file,
         ["<C-c>"] = false,
+        ["<C-e>"] = create_new_file,
+        ["<C-d>"] = delete_file,
       },
       n = {
         ["<C-c>"] = actions.close,
         ["<C-e>"] = create_new_file,
+        ["<C-d>"] = delete_file,
       }
     },
     vimgrep_arguments = {
