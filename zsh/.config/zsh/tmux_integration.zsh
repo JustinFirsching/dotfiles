@@ -5,10 +5,10 @@ elif [ ! -z "$(which tmux)" ]; then
 fi
 
 # Setup TMUX_MAIN as a widget
-function attach-tmux-main() {
-    [ ! -z $TMUX_MAIN ] && BUFFER="$TMUX_MAIN" && zle accept-line
+function __proj() {
+    BUFFER="proj" && zle accept-line
 }
-zle -N attach-tmux-main
+zle -N proj-widget __proj
 
 # Setup TMUX_MAIN to run at startup
 eval $TMUX_MAIN
