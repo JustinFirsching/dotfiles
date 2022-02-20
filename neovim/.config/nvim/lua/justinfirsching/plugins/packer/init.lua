@@ -26,9 +26,6 @@ return require('packer').startup(function(use)
     },
     config = function()
       require('justinfirsching.plugins.lsp')
-    end,
-    run = function()
-      require('justinfirsching.plugins.lsp').install_missing()
     end
   }
   -- Java LSP
