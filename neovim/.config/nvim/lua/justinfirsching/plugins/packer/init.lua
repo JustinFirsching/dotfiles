@@ -10,7 +10,14 @@ end
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package Manager
   use 'itchyny/lightline.vim' -- Aesthetic bar
-  use {'morhetz/gruvbox', as = 'gruvbox'} -- Aesthetic theme
+  -- Aesthetic theme
+  use {
+      'morhetz/gruvbox',
+      as = 'gruvbox',
+      config = function()
+        require('justinfirsching.plugins.colorscheme')
+      end
+  }
   -- LSP install
   use {
     'williamboman/nvim-lsp-installer',
