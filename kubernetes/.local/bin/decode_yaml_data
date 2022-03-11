@@ -1,0 +1,3 @@
+#!/bin/sh
+
+yq eval 'to_json' - | jq '.data |= map_values(@base64d)' | yq e -P
