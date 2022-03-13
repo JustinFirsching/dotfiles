@@ -40,7 +40,6 @@ return require('packer').startup(function(use)
       'hrsh7th/cmp-nvim-lsp', -- LSP source for nvim-cmp
       'hrsh7th/cmp-buffer', -- Buffer source for nvim-cmp
       'saadparwaiz1/cmp_luasnip', -- Snippet source for nvim-cmp
-      'kdheepak/cmp-latex-symbols', -- Latex source for nvim-cpm
     },
   }
   -- Snippet Engine
