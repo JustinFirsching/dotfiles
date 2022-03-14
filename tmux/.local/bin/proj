@@ -1,44 +1,69 @@
 #!/bin/sh
 
-if [ $# -gt 0 ]; then
-    src_dirs=$@
-else
-    src_dirs="$HOME/src/"
-fi
+function find_projects() {
+    SRC_DIRS=${SRC_DIRS:-"$HOME/src"}
 
-project_dirs=$(find $src_dirs -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort)
-if [ -z "$project_dirs" ]; then
-    >&2 echo No projects found! Project directories searched: "$src_dirs"
-    exit 1
-fi
+    local project_dirs=$(find $SRC_DIRS -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort)
+    if [ -z "$project_dirs" ]; then
+        >&2 echo "No projects found! Project directories searched: $SRC_DIRS"
+        return 1
+    else
+        echo "$project_dirs"
+    fi
+}
 
-selected=$(echo "$project_dirs" | fzf --filepath-word)
-if [ -z "$selected" ]; then
-    # This must mean that no project was selected
-    exit 0
-fi
+function __select_project() {
+    local query=$1
+    local project_dirs=$(find_projects)
+    fzf --filepath-word --query="$query" -1 <<< "$project_dirs"
+}
 
-# Use the directory name as the project name
-proj_name=$(basename -- $selected)
+function __get_tmux_session_name_from_dir() {
+    # What are the odds we have two projects with the same name that we want
+    # different windows for? Low. What are the odds if we account for it now? 0
+    local dirname=$1
+    local base_dir=$(basename -- "$dirname")
 
-# This sed replaces each directory with the first letter of its name.
-# What are the odds we have two projects with the same name that we want
-# different windows for? Low. What are the odds if we account for it now? 0
-if [ $(find $src_dirs -mindepth 1 -maxdepth 1 -type d -exec basename -- {} \; | grep -cw $proj_name) -gt 1 ]; then
-    short_path=$(echo $selected | sed 's#\(.\)[^/]*/#\1/#g')
-    session_name=$short_path
-else
-    session_name=$proj_name
-fi
+    shift
+    local project_dirs=${@:-$(find_projects)}
+    local num_common_basenames=$(xargs -i basename -- {} <<< "$project_dirs" | grep -cw "$base_dir")
 
-# If there isn't a session yet, make one
-if ! tmux has-session -t $session_name 2>/dev/null; then
-    tmux new-session -d -s $session_name -c $selected
-fi
+    local session_name=$base_dir
+    # This sed replaces each directory with the first letter of its name.
+    [ "$num_common_basenames" -gt 1 ] && session_name=$(sed 's#\(.\)[^/]*/#\1/#g' <<< "$dirname")
+    echo $session_name
+}
 
-# If we are in TMUX now
-if [ -z $TMUX ]; then
-    tmux attach-session -t $session_name
-else
-    tmux switch-client -t $session_name
-fi
+function __create_session() {
+    local session_name=$1
+    local start_dir=${2:-$HOME}
+    # If there isn't a session yet, make one
+    if ! tmux has-session -t "$session_name" 2>/dev/null; then
+        tmux new-session -d -s "$session_name" -c "$start_dir"
+    fi
+
+}
+
+function __attach_tmux() {
+    # If we are in TMUX now
+    local session_name=$1
+    if [ -z "$TMUX" ]; then
+        tmux attach-session -t "$session_name"
+    else
+        tmux switch-client -t "$session_name"
+    fi
+}
+
+function proj() {
+    local query=$1
+    local selected_dir=$(__select_project "$query")
+
+    # Use the directory name as the project name
+    local proj_name=$(basename -- "$selected")
+    local session_name=$(__get_tmux_session_name_from_dir "$selected_dir")
+    echo $session_name
+    __create_session "$session_name" "$selected_dir"
+    __attach_tmux "$session_name"
+}
+
+proj $@
