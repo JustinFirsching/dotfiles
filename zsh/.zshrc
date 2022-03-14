@@ -17,12 +17,17 @@ if [[ -f ~/.zprofile ]]; then
     . ~/.zprofile
 fi
 
-_load_settings(){
-    _dir="$1"
-    if [ -d "$_dir" ]; then
-        for config in "$_dir"/**/*(N-.); do
-            . $config
+function __load_settings(){
+    local config="$1"
+    if [ -d "$config" ]; then
+        local src
+        for src in "${config%%/}"/**/*(N-.); do
+            . $src
         done
+    elif [ -f "$config" ]; then
+        . $config
     fi
 }
-_load_settings "$HOME/.config/zsh"
+__load_settings "$HOME/.config/zsh"
+__load_settings "$HOME/.config/sh"
+source tmux-loop
