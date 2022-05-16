@@ -31,10 +31,10 @@ local create_new_file = function(prompt_bufnr)
   actions.close(prompt_bufnr)
   if not is_dir(file) then
     Path:new(file):touch { parents = true }
-    vim.cmd(string.format(":edit %s", file))
+    vim.cmd(string.format(":edit! %s", file))
   else
     Path:new(file:sub(1, -2)):mkdir { parents = true }
-    vim.cmd(string.format(":Explore %s", file))
+    vim.cmd(string.format(":Explore! %s", file))
   end
 end
 
@@ -60,7 +60,6 @@ local delete_file = function(prompt_bufnr)
         return
     end
 
-    actions.close(prompt_bufnr)
     delete_up(Path:new(file))
 end
 

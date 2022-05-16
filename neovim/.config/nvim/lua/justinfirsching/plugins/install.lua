@@ -52,7 +52,7 @@ return require('packer').startup(function(use)
   use {
     'nvim-telescope/telescope.nvim',
     config = function()
-      require('justinfirsching.plugins.telescope')
+      require('justinfirsching.plugins.nvim-telescope')
     end,
     requires = {
       'nvim-lua/plenary.nvim',

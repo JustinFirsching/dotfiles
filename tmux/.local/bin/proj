@@ -33,7 +33,9 @@ fi
 
 # If there isn't a session yet, make one
 if ! tmux has-session -t $session_name 2>/dev/null; then
-    tmux new-session -d -s $session_name -c $selected
+    pushd $selected &>/dev/null
+    tmux new-session -d -s $session_name bash
+    popd &>/dev/null
 fi
 
 # If we are in TMUX now
