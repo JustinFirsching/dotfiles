@@ -12,18 +12,14 @@ return require('packer').startup(function(use)
   use 'itchyny/lightline.vim' -- Aesthetic bar
   -- Aesthetic theme
   use {
-      'morhetz/gruvbox',
-      as = 'gruvbox',
-      config = function()
-        require('justinfirsching.plugins.colorscheme')
-      end
+    'morhetz/gruvbox',
+    as = 'gruvbox',
+    config = function()
+      require('justinfirsching.plugins.colorscheme')
+    end
   }
-  -- LSP install
   use {
-    'williamboman/nvim-lsp-installer',
-    requires = {
-      'neovim/nvim-lspconfig', -- Language Servers
-    },
+    'neovim/nvim-lspconfig', -- Language Servers
     config = function()
       require('justinfirsching.plugins.lsp')
     end
