@@ -21,7 +21,7 @@ return require('packer').startup(function(use)
   use {
     'neovim/nvim-lspconfig', -- Language Servers
     config = function()
-      require('justinfirsching.plugins.lsp')
+      require('justinfirsching.plugins.lsp').setup_servers()
     end
   }
   -- Java LSP
