@@ -28,6 +28,6 @@ function __load_settings(){
         . $config
     fi
 }
-__load_settings "$HOME/.config/zsh"
 __load_settings "$HOME/.config/sh"
+__load_settings "$HOME/.config/zsh"
 source tmux-loop
