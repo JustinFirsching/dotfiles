@@ -91,7 +91,7 @@ require('telescope').setup{
   },
   pickers = {
     find_files = {
-      find_command = { "fd", "--hidden", "--exclude", ".git" }
+      find_command = { "fd", "-L", "-t", "f", "--hidden", "--exclude", ".git" }
     },
   }
 }
