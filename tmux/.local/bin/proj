@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function find_projects() {
     SRC_DIRS=${SRC_DIRS:-"$HOME/src"}

@@ -12,7 +12,7 @@ esac
 # disconnect from it with C-b + d, in which case drop to the terminal shell, or
 # disconnect from it by killing the shell in tmux, in which case kill the
 # terminal too.
-if [ "$console" = false ] && [ -z "$TMUX" ] && [ ! -z $(which tmux) ]; then
+if [ "$console" = false ] && [ -z "$TMUX" ] && [ ! -z "$(which tmux)" ]; then
     while true; do
         # Create/attach to main
         tmux new-session -A -s main >/dev/null
