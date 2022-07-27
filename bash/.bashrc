@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 function __load_settings(){
     local config=$1
     if [ -d "$config" ]; then
-        local scripts=$(find $config -type f)
+        local scripts=$(find -L $config -type f)
 
         local src
         for src in $scripts; do
@@ -15,4 +15,5 @@ function __load_settings(){
 }
 
 __load_settings "$HOME/.config/sh"
+__load_settings "$HOME/.config/bash"
 source tmux-loop
