@@ -1,7 +1,7 @@
 *.font: Liberation Mono:pixelsize=19:antialias=true:autohint=true;
 *.alpha: 0.9
 
-# Enable high contrast gruvbox
+/* Enable high contrast gruvbox */
 /* 8 Normal Colors */
 st.color0: #1d2021
 st.color1: #cc241d
@@ -21,3 +21,5 @@ st.color12: #83a598
 st.color13: #d3869b
 st.color14: #8ec07c
 st.color15: #ebdbb2
+
+Xcursor.size: 24
