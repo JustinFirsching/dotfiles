@@ -86,12 +86,24 @@ require('telescope').setup{
       "--line-number",
       "--column",
       "--smart-case",
-      "--hidden"
+      "--hidden",
+      "-g!.git",
+      "-g!.venv"
     }
   },
   pickers = {
     find_files = {
-      find_command = { "fd", "-L", "-t", "f", "--hidden", "--exclude", ".git" }
+      find_command = {
+          "fd",
+          "-L",
+          "-t",
+          "f",
+          "--hidden",
+          "--exclude",
+          ".git",
+          "--exclude",
+          ".venv"
+      }
     },
   }
 }
