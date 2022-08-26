@@ -7,10 +7,12 @@ function __load_settings(){
 
         local src
         for src in $scripts; do
-            source $src
+            bn=$(basename -- "$src")
+            # Don't load README files
+            [ "${bn%.*}" != "README" ] && source $src
         done
     elif [ -f "$config" ]; then
-        source $config
+        [ "${bn%.*}" != "README" ] && source $config
     fi
 }
 
