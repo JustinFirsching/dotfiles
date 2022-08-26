@@ -22,10 +22,14 @@ function __load_settings(){
     if [ -d "$config" ]; then
         local src
         for src in "${config%%/}"/**/*(N-.); do
-            . $src
+            bn=$(basename -- "$src")
+            # Don't load README files
+            [ "${bn%.*}" != "README" ] && . $src
         done
     elif [ -f "$config" ]; then
-        . $config
+        bn=$(basename -- "$config")
+        # Don't load README files
+        [ "${bn%.*}" != "README" ] && . $config
     fi
 }
 __load_settings "$HOME/.config/sh"
