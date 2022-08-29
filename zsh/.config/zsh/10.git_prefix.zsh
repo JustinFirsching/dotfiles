@@ -6,9 +6,7 @@ zstyle ':vcs_info:*' enable git
 # This line obtains information from the vcs.
 zstyle ':vcs_info:git*' formats " (%b)"
 
-precmd() {
-    vcs_info
-}
+precmd_functions+=(vcs_info)
 
 # Enable substitution in the prompt.
 setopt prompt_subst
