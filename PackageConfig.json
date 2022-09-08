@@ -1,0 +1,19 @@
+{
+    "Arch Linux": {
+        "base": [
+            "bash",
+            "fonts",
+            "neovim",
+            "sh",
+            "tmux",
+            "zsh"
+        ],
+        "gui": [
+            "i3",
+            "i3-gaps",
+            "picom",
+            "polybar",
+            "X11"
+        ]
+    }
+}
