@@ -62,11 +62,8 @@ setup_server = function(server, config)
   end
 
   config = vim.tbl_deep_extend("force", {
-    capabilities = vim.lsp.protocol.make_client_capabilities(),
+    capabilities = require("cmp_nvim_lsp").default_capabilities(),
     on_attach = on_attach,
-    flags = {
-      debounce_text_changes = 150,
-    },
   }, config)
 
   lspconfig[server].setup(config)
