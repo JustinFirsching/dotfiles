@@ -18,6 +18,10 @@ return require('packer').startup(function(use)
   use {
     'neovim/nvim-lspconfig', -- Language Servers
   }
+  use {
+    'williamboman/mason.nvim', -- External Tool Installer
+    'williamboman/mason-lspconfig.nvim', -- LSP Installer
+  }
   -- Java LSP
   use 'mfussenegger/nvim-jdtls'
   -- Completion plugins
