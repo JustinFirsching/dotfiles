@@ -26,7 +26,7 @@ function __get_tmux_session_name_from_dir() {
 
     shift
     local project_dirs=${@:-$(find_projects)}
-    local num_common_basenames=$(xargs -i basename -- {} <<< "$project_dirs" | grep -cw "$base_dir")
+    local num_common_basenames=$(xargs -i basename -- {} <<< "$project_dirs" | grep -cwx "$base_dir")
 
     local session_name=$base_dir
     # This sed replaces each directory with the first letter of its name.
