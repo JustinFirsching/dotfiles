@@ -1,2 +1,5 @@
-require('justinfirsching.plugins')
-require('justinfirsching.general')
+require('justinfirsching.autocmds')
+require('justinfirsching.commands')
+require('justinfirsching.keybinds')
+require('justinfirsching.options')
+require('justinfirsching.packer')

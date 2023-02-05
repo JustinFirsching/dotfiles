@@ -107,3 +107,9 @@ require('telescope').setup{
     },
   }
 }
+
+-- Keybinds
+vim.keymap.set('n', '<leader>rf', '<cmd>Telescope find_files<CR>')
+vim.keymap.set('n', '<leader>rb', '<cmd>Telescope buffers<CR>')
+vim.keymap.set('n', '<leader>ro', '<cmd>Telescope oldfiles<CR>')
+vim.keymap.set('n', '<leader>ps', '<cmd>Telescope live_grep<CR>')

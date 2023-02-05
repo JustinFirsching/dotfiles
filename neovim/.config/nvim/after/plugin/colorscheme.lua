@@ -1,3 +1,7 @@
-if packer_plugins and packer_plugins["gruvbox"] and packer_plugins["gruvbox"].loaded then
-    require('justinfirsching.plugins.colorscheme')
-end
+vim.cmd.colorscheme("gruvbox")
+vim.opt.termguicolors = true
+vim.opt.background = "dark"
+vim.g.gruvbox_contrast_dark = "hard"
+
+local hl_opts = { bg = "none", ctermbg = "none" }
+vim.api.nvim_set_hl(0, "Normal", hl_opts)

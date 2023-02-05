@@ -14,24 +14,15 @@ return require('packer').startup(function(use)
   use {
     'morhetz/gruvbox',
     as = 'gruvbox',
-    config = function()
-      require('justinfirsching.plugins.colorscheme')
-    end
   }
   use {
     'neovim/nvim-lspconfig', -- Language Servers
-    config = function()
-      require('justinfirsching.plugins.lsp').setup_servers()
-    end
   }
   -- Java LSP
   use 'mfussenegger/nvim-jdtls'
   -- Completion plugins
   use {
     'hrsh7th/nvim-cmp',
-    config = function()
-      require("justinfirsching.plugins.cmp")
-    end,
     requires = {
       'hrsh7th/cmp-nvim-lsp', -- LSP source for nvim-cmp
       'hrsh7th/cmp-buffer', -- Buffer source for nvim-cmp
@@ -52,9 +43,6 @@ return require('packer').startup(function(use)
   -- File Finder + Code Navigation
   use {
     'nvim-telescope/telescope.nvim',
-    config = function()
-      require('justinfirsching.plugins.telescope')
-    end,
     requires = {
       'nvim-lua/plenary.nvim',
       'BurntSushi/ripgrep',
@@ -64,9 +52,6 @@ return require('packer').startup(function(use)
   -- Syntax
   use {
     'nvim-treesitter/nvim-treesitter',
-    config = function()
-      require('justinfirsching.plugins.treesitter')
-    end,
     run = ':TSUpdate',
   }
 
