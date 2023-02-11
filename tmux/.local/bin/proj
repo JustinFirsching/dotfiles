@@ -38,7 +38,7 @@ function __create_session() {
     local session_name=$1
     local start_dir=${2:-$HOME}
     # If there isn't a session yet, make one
-    if ! tmux has-session -t "$session_name" 2>/dev/null; then
+    if ! tmux has-session -t "=$session_name" 2>/dev/null; then
         tmux new-session -d -s "$session_name" -c "$start_dir"
     fi
 
@@ -48,9 +48,9 @@ function __attach_tmux() {
     # If we are in TMUX now
     local session_name=$1
     if [ -z "$TMUX" ]; then
-        tmux attach-session -t "$session_name"
+        tmux attach-session -t "=$session_name"
     else
-        tmux switch-client -t "$session_name"
+        tmux switch-client -t "=$session_name"
     fi
 }
 
