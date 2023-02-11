@@ -14,3 +14,4 @@ vim.opt.background = "dark"
 
 local hl_opts = { bg = "none", ctermbg = "none" }
 vim.api.nvim_set_hl(0, "Normal", hl_opts)
+vim.api.nvim_set_hl(0, "NormalFloat", hl_opts)
