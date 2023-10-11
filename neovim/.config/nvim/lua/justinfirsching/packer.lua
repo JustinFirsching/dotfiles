@@ -29,7 +29,7 @@ return require('packer').startup(function(use)
     'hrsh7th/nvim-cmp',
     requires = {
       'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-nvim-lsp-signature-help',
+      'ray-x/lsp_signature.nvim',
       'hrsh7th/cmp-buffer',
       'saadparwaiz1/cmp_luasnip',
     },

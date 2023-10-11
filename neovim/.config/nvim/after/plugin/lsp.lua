@@ -24,6 +24,16 @@ servers = {
     yamlls = true,
 }
 
+lsp_signature_config = {
+    hint_prefix = '',
+    -- This is annoying... inline text should be for errors only
+    hint_inline = function() return false end,
+    handler_opts = {
+        border = 'none'
+    },
+    select_signature_key = '<C-n>',
+}
+
 local on_attach = function(_, bufnr)
   local opts = { noremap=true, silent=true }
   vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
@@ -49,6 +59,11 @@ local on_attach = function(_, bufnr)
     vim.keymap.set("n", "<leader>wf", function() builtin.lsp_workspace_symbols{ symbols={"Function", "Method"} } end, opts)
     -- Find Project Classes, Enums and Structs
     vim.keymap.set("n", "<leader>wc", function() builtin.lsp_workspace_symbols{ symbols={"Class", "Enum", "Struct"} } end, opts)
+  end
+
+  local has_lsp_signature, lsp_signature = pcall(require, 'lsp_signature')
+  if has_lsp_signature then
+      lsp_signature.on_attach(lsp_signature_config, bufnr)
   end
 end
 
