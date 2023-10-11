@@ -7,7 +7,6 @@ export PS1="%n@%M:%c$ "
 
 export GPG_TTY=$TTY
 
-PATH=$HOME/go/bin:$PATH
 PATH=$HOME/.local/bin:$PATH
 export PATH
 
