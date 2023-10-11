@@ -24,3 +24,4 @@ vim.opt.laststatus = 2
 vim.opt.showmode = false
 vim.opt.hlsearch = false
 vim.opt.completeopt = 'menu,menuone,noselect,noinsert,preview'
+vim.opt.mouse = nil
