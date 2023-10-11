@@ -24,6 +24,8 @@ return require('packer').startup(function(use)
   }
   -- Java LSP
   use 'mfussenegger/nvim-jdtls'
+  -- Copilot
+  use 'zbirenbaum/copilot.lua'
   -- Completion plugins
   use {
     'hrsh7th/nvim-cmp',
@@ -32,6 +34,7 @@ return require('packer').startup(function(use)
       'ray-x/lsp_signature.nvim',
       'hrsh7th/cmp-buffer',
       'saadparwaiz1/cmp_luasnip',
+      'zbirenbaum/copilot-cmp',
     },
   }
   -- Snippet Engine
