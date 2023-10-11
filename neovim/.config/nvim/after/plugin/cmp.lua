@@ -18,7 +18,7 @@ cmp.setup {
     ['<Tab>'] = cmp.mapping.confirm({ select = true }),
   },
   completion = {
-    completeopt = 'menu,menuone,noselect',
+    completeopt = 'menu,menuone,noselect,noinsert,preview',
   },
   sources = {
     { name = 'nvim_lsp' },
