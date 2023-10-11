@@ -20,4 +20,4 @@ bindkey "^[[1;5C" forward-word                      # Ctrl+Right
 bindkey "^[[1;5D" backward-word                     # Ctrl+Right
 bindkey "^[[3;5~" kill-word                         # Ctrl+Delete
 bindkey '^R' history-incremental-search-backward    # Ctrl+R
-bindkey "^Bp" proj-widget                           # Ctrl+B p
+bindkey "^B^P" proj-widget                          # Ctrl+B p
