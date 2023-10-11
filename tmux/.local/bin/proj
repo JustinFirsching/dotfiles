@@ -1,20 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+PROJECT_DIRS=(
+    "$HOME/Notes"
+)
 
 function find_projects() {
     SRC_DIRS=${SRC_DIRS:-"$HOME/src"}
 
-    local project_dirs=$(find $SRC_DIRS -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort)
+    local project_dirs=$(find $SRC_DIRS -mindepth 1 -maxdepth 1 -type d,l 2>/dev/null | sort)
     if [ -z "$project_dirs" ]; then
         >&2 echo "No projects found! Project directories searched: $SRC_DIRS"
         return 1
     else
         echo "$project_dirs"
+        for project_dir in "${PROJECT_DIRS[@]}"; do
+            if [ -d "$project_dir" ]; then
+                echo $project_dir
+            fi
+        done
     fi
 }
 
 function __select_project() {
     local query=$1
-    local project_dirs=$(find_projects)
+    local project_dirs=$(sort - <<< $(find_projects))
     fzf --filepath-word --query="$query" -1 <<< "$project_dirs"
 }
 
@@ -59,9 +68,13 @@ function proj() {
     local selected_dir=$(__select_project "$query")
 
     # Use the directory name as the project name
-    local proj_name=$(basename -- "$selected")
+    local proj_name=$(basename -- "$selected_dir")
+    if [ -z "$proj_name" ]; then
+        exit
+    fi
+
     local session_name=$(__get_tmux_session_name_from_dir "$selected_dir")
-    echo $session_name
+
     __create_session "$session_name" "$selected_dir"
     __attach_tmux "$session_name"
 }
