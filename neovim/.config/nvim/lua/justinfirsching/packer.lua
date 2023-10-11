@@ -43,7 +43,7 @@ return require('packer').startup(function(use)
     }
   }
   use 'tpope/vim-fugitive' -- Git Integration
-  use 'mhinz/vim-signify' -- Git Indicate Line Changes
+  use 'lewis6991/gitsigns.nvim' -- Git Indicate Line Changes
   use 'mbbill/undotree' -- Undo History
   -- File Finder + Code Navigation
   use {
