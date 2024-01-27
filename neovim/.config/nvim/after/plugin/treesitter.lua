@@ -35,6 +35,7 @@ treesitter_configs.setup {
       "toml",
       "tsx",
       "typescript",
+      "vimdoc",
       "yaml",
   },
   highlight = {
