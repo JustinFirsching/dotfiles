@@ -14,4 +14,7 @@ vim.api.nvim_create_autocmd({'BufWritePre'}, {
 })
 
 -- Load updates to Xresources
-vim.cmd('autocmd BufWritePost .Xresources silent !xrdb <afile>')
+vim.api.nvim_create_autocmd({'BufWritePost'}, {
+    pattern = { ".Xresources" },
+    command = "silent !xrdb %"
+})
