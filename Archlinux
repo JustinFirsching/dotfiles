@@ -1,3 +1,0 @@
-#!/bin/sh
-
-stow -R -t ~ bash i3 i3-gaps neovim picom polybar X11 zsh

@@ -1,3 +1,0 @@
-#!/bin/sh
-
-stow -t ~ bash neovim zsh
