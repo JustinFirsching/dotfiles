@@ -24,6 +24,8 @@ return require('packer').startup(function(use)
   }
   -- Java LSP
   use 'mfussenegger/nvim-jdtls'
+  -- Linters
+  use 'mfussenegger/nvim-lint'
   -- Copilot
   use 'zbirenbaum/copilot.lua'
   -- Completion plugins
