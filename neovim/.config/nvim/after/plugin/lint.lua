@@ -1,10 +1,15 @@
+local has_lint, lint = pcall(require, 'lint')
+if not has_lint then
+    return
+end
+
 vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave', 'TextChanged', 'BufWritePost' }, {
     callback = function()
-        require('lint').try_lint()
+        lint.try_lint()
     end,
 })
 
-require('lint').linters_by_ft = {
+lint.linters_by_ft = {
     go = { 'golangcilint', },
     json = { 'jsonlint', },
     yaml = { 'yamllint', },
