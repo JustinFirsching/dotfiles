@@ -18,3 +18,4 @@
 	path = nvim
 [fetch]
 	prune = true
+	pruneTags = true
