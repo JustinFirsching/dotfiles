@@ -9,7 +9,6 @@ if not has_gruvbox then
     vim.cmd.colorscheme("habamax")
 end
 
-vim.opt.termguicolors = true
 vim.opt.background = "dark"
 
 local hl_opts = { bg = "none", ctermbg = "none" }
