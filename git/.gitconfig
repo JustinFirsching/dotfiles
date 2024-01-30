@@ -1,6 +1,7 @@
 [user]
 	name = Justin Firsching
 	email = JustinFirsching@gmail.com
+	signingkey = 6D2DBF40ED8F62AB
 [commit]
 	gpgsign = true
 [gpg]
