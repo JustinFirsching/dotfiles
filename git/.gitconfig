@@ -1,0 +1,13 @@
+[user]
+	name = Justin Firsching
+	email = JustinFirsching@gmail.com
+[commit]
+	gpgsign = true
+[gpg]
+	program = /usr/bin/gpg
+[init]
+	defaultBranch = master
+[credential]
+	helper = store
+[push]
+	default = current
