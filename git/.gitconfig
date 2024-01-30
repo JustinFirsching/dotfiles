@@ -13,6 +13,6 @@
 [push]
 	default = current
 [merge]
-    tool = nvimdiff
+	tool = nvimdiff
 [mergetool]
-    path = nvim
+	path = nvim
