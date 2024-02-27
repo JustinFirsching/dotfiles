@@ -1,12 +1,12 @@
-local has_telescope, _ = pcall(require, 'telescope')
+local has_telescope, _ = pcall(require, "telescope")
 if not has_telescope then
     return
 end
 
-local actions = require('telescope.actions')
-local action_state = require('telescope.actions.state')
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
 
-local Path = require('plenary.path')
+local Path = require("plenary.path")
 local os_sep = Path.path.sep
 
 local create_new_file = function(prompt_bufnr)
@@ -69,7 +69,7 @@ local delete_file = function(prompt_bufnr)
     delete_up(Path:new(file))
 end
 
-require('telescope').setup{
+require("telescope").setup{
   defaults = {
     mappings = {
       i = {
@@ -114,7 +114,8 @@ require('telescope').setup{
 }
 
 -- Keybinds
-vim.keymap.set('n', '<leader>rf', '<cmd>Telescope find_files<CR>')
-vim.keymap.set('n', '<leader>rb', '<cmd>Telescope buffers<CR>')
-vim.keymap.set('n', '<leader>ro', '<cmd>Telescope oldfiles<CR>')
-vim.keymap.set('n', '<leader>ps', '<cmd>Telescope live_grep<CR>')
+local builtin = require("telescope.builtin")
+vim.keymap.set("n", "<leader>rf", builtin.find_files)
+vim.keymap.set("n", "<leader>rb", builtin.buffers)
+vim.keymap.set("n", "<leader>ro", builtin.oldfiles)
+vim.keymap.set("n", "<leader>ps", builtin.live_grep)
