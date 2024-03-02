@@ -108,6 +108,8 @@ require("telescope").setup{
           "--exclude",
           ".git",
           "--exclude",
+          "node_modules",
+          "--exclude",
           ".venv"
       }
     },
