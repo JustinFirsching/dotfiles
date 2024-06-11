@@ -3,6 +3,49 @@ if not has_lsp then
     return nil
 end
 
+lsp_signature_config = {
+    hint_prefix = '',
+    -- This is annoying... inline text should be for errors only
+    hint_inline = function() return false end,
+    handler_opts = {
+        border = 'none'
+    },
+    select_signature_key = '<C-n>',
+}
+
+local lsp_opts = { noremap=true, silent=true }
+local on_attach = function(_, bufnr)
+  vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, lsp_opts)
+  vim.keymap.set("n", "<leader>gD", vim.lsp.buf.declaration, lsp_opts)
+  vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, lsp_opts)
+  vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format{ async = true } end, lsp_opts)
+  vim.keymap.set("n", "K", vim.lsp.buf.hover, lsp_opts)
+  vim.keymap.set("n", "<leader>i", vim.lsp.buf.implementation, lsp_opts)
+  vim.keymap.set("n", "]d", vim.diagnostic.goto_next, lsp_opts)
+  vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, lsp_opts)
+  vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, lsp_opts)
+  vim.keymap.set("n", "<leader>rr", vim.lsp.buf.references, lsp_opts)
+  vim.keymap.set("n", "<leader>sd", vim.diagnostic.open_float, lsp_opts)
+  vim.keymap.set("n", "<leader>sh", vim.lsp.buf.signature_help, lsp_opts)
+
+  local has_telescope, builtin = pcall(require, 'telescope.builtin')
+  if has_telescope then
+    -- Find Document Symbols
+    vim.keymap.set("n", "<leader>ds", builtin.lsp_document_symbols, lsp_opts)
+    -- Find Project Symbols (This will probably run slow, lsp_opts)
+    vim.keymap.set("n", "<leader>ws", builtin.lsp_dynamic_workspace_symbols, lsp_opts)
+    -- Find Project Functions and Methods
+    vim.keymap.set("n", "<leader>wf", function() builtin.lsp_workspace_symbols{ symbols={"Function", "Method"} } end, lsp_opts)
+    -- Find Project Classes, Enums and Structs
+    vim.keymap.set("n", "<leader>wc", function() builtin.lsp_workspace_symbols{ symbols={"Class", "Enum", "Struct"} } end, lsp_opts)
+  end
+
+  local has_lsp_signature, lsp_signature = pcall(require, 'lsp_signature')
+  if has_lsp_signature then
+      lsp_signature.on_attach(lsp_signature_config, bufnr)
+  end
+end
+
 servers = {
     bashls = true,
     clangd = true,
@@ -14,6 +57,25 @@ servers = {
     jdtls = true,
     jsonls = true,
     kotlin_language_server = true,
+    omnisharp = {
+        cmd = {
+            "omnisharp"
+            -- "dotnet",
+            -- os.getenv("HOME") .. "/.local/share/nvim/mason/packages/omnisharp/libexec/OmniSharp.dll"
+        },
+        on_attach = function(client, bufnr)
+            -- Do the default on_attach
+            on_attach(client, bufnr)
+
+            -- Then fix the keymaps
+            local has_omnisharp, omnisharp_extended = pcall(require, 'omnisharp_extended')
+            if has_omnisharp then
+                vim.keymap.set("n", "<leader>gd", omnisharp_extended.lsp_definition, lsp_opts)
+                vim.keymap.set("n", "<leader>i", omnisharp_extended.lsp_implementation, lsp_opts)
+                vim.keymap.set("n", "<leader>rr", omnisharp_extended.lsp_references, lsp_opts)
+            end
+        end,
+    },
     pyright = true,
     rust_analyzer = true,
     sqlls = true,
@@ -23,49 +85,6 @@ servers = {
     tsserver = true,
     yamlls = true,
 }
-
-lsp_signature_config = {
-    hint_prefix = '',
-    -- This is annoying... inline text should be for errors only
-    hint_inline = function() return false end,
-    handler_opts = {
-        border = 'none'
-    },
-    select_signature_key = '<C-n>',
-}
-
-local on_attach = function(_, bufnr)
-  local opts = { noremap=true, silent=true }
-  vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-  vim.keymap.set("n", "<leader>gD", vim.lsp.buf.declaration, opts)
-  vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, opts)
-  vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format{ async = true } end, opts)
-  vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-  vim.keymap.set("n", "<leader>i", vim.lsp.buf.implementation, opts)
-  vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-  vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-  vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-  vim.keymap.set("n", "<leader>rr", vim.lsp.buf.references, opts)
-  vim.keymap.set("n", "<leader>sd", vim.diagnostic.open_float, opts)
-  vim.keymap.set("n", "<leader>sh", vim.lsp.buf.signature_help, opts)
-
-  local has_telescope, builtin = pcall(require, 'telescope.builtin')
-  if has_telescope then
-    -- Find Document Symbols
-    vim.keymap.set("n", "<leader>ds", builtin.lsp_document_symbols, opts)
-    -- Find Project Symbols (This will probably run slow, opts)
-    vim.keymap.set("n", "<leader>ws", builtin.lsp_dynamic_workspace_symbols, opts)
-    -- Find Project Functions and Methods
-    vim.keymap.set("n", "<leader>wf", function() builtin.lsp_workspace_symbols{ symbols={"Function", "Method"} } end, opts)
-    -- Find Project Classes, Enums and Structs
-    vim.keymap.set("n", "<leader>wc", function() builtin.lsp_workspace_symbols{ symbols={"Class", "Enum", "Struct"} } end, opts)
-  end
-
-  local has_lsp_signature, lsp_signature = pcall(require, 'lsp_signature')
-  if has_lsp_signature then
-      lsp_signature.on_attach(lsp_signature_config, bufnr)
-  end
-end
 
 setup_server = function(server, config)
   if not config then

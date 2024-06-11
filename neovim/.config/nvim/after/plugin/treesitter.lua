@@ -8,6 +8,7 @@ treesitter_configs.setup {
       "bash",
       "bibtex",
       "c",
+      "c_sharp",
       "cmake",
       "cpp",
       "css",

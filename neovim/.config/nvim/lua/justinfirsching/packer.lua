@@ -24,6 +24,8 @@ return require('packer').startup(function(use)
   }
   -- Java LSP
   use 'mfussenegger/nvim-jdtls'
+  -- C# LSP
+  use 'Hoffs/omnisharp-extended-lsp.nvim'
   -- Linters
   use 'mfussenegger/nvim-lint'
   -- Copilot
