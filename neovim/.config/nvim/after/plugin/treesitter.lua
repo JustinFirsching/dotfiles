@@ -24,6 +24,7 @@ treesitter_configs.setup {
       "jsonc",
       "kotlin",
       "latex",
+      "lua",
       "make",
       "python",
       "r",
