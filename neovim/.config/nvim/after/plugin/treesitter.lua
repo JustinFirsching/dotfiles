@@ -26,6 +26,7 @@ treesitter_configs.setup {
       "latex",
       "lua",
       "make",
+      "markdown",
       "python",
       "r",
       "regex",
