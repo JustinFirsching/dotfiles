@@ -28,6 +28,8 @@ return require('packer').startup(function(use)
   use 'Hoffs/omnisharp-extended-lsp.nvim'
   -- Linters
   use 'mfussenegger/nvim-lint'
+  -- Formatters
+  use 'stevearc/conform.nvim'
   -- Copilot
   use 'zbirenbaum/copilot.lua'
   -- Completion plugins
