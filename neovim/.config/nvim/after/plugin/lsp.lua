@@ -3,7 +3,7 @@ if not has_lsp then
     return nil
 end
 
-lsp_signature_config = {
+local lsp_signature_config = {
     hint_prefix = '',
     -- This is annoying... inline text should be for errors only
     hint_inline = function() return false end,
@@ -45,7 +45,7 @@ local on_attach = function(_, bufnr)
   end
 end
 
-servers = {
+local servers = {
     bashls = true, -- Bash
     clangd = true, -- C/C++
     cmake = true, -- CMake
@@ -85,7 +85,7 @@ servers = {
     yamlls = true, -- YAML
 }
 
-setup_server = function(server, config)
+local setup_server = function(server, config)
   if not config then
     return
   end
@@ -102,7 +102,7 @@ setup_server = function(server, config)
   lspconfig[server].setup(config)
 end
 
-setup_servers = function()
+local setup_servers = function()
     for server, config in pairs(servers) do
         setup_server(server, config)
     end
