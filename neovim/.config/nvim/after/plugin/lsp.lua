@@ -46,16 +46,16 @@ local on_attach = function(_, bufnr)
 end
 
 servers = {
-    bashls = true,
-    clangd = true,
-    cmake = true,
-    cssls = true,
-    dockerls = true,
-    gopls = true,
-    html = true,
-    jdtls = true,
-    jsonls = true,
-    kotlin_language_server = true,
+    bashls = true, -- Bash
+    clangd = true, -- C/C++
+    cmake = true, -- CMake
+    cssls = true, -- CSS
+    dockerls = true, -- Docker
+    gopls = true, -- Golang
+    html = true, -- HTML
+    jdtls = true, -- Java
+    jsonls = true, -- JSON
+    kotlin_language_server = true, -- Kotlin
     omnisharp = {
         cmd = {
             "omnisharp"
@@ -74,15 +74,15 @@ servers = {
                 vim.keymap.set("n", "<leader>rr", omnisharp_extended.lsp_references, lsp_opts)
             end
         end,
-    },
-    pyright = true,
-    rust_analyzer = true,
-    sqlls = true,
-    lua_ls = true,
-    tailwindcss = true,
-    texlab = true,
-    tsserver = true,
-    yamlls = true,
+    }, -- C#
+    pyright = true, -- Python
+    rust_analyzer = true, -- Rust
+    sqlls = true, -- SQL
+    lua_ls = true, -- Lua
+    tailwindcss = true, -- Tailwind (CSS)
+    texlab = true, -- TeX (LaTeX)
+    tsserver = true, -- TypeScript
+    yamlls = true, -- YAML
 }
 
 setup_server = function(server, config)
