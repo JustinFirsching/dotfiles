@@ -17,7 +17,7 @@ bindkey "${terminfo[khome]}" beginning-of-line      # Home key
 bindkey "${terminfo[kend]}" end-of-line             # End key
 bindkey "${terminfo[kdch1]}" delete-char            # Delete Key
 bindkey "^[[1;5C" forward-word                      # Ctrl+Right
-bindkey "^[[1;5D" backward-word                     # Ctrl+Right
+bindkey "^[[1;5D" backward-word                     # Ctrl+Left
 bindkey "^[[3;5~" kill-word                         # Ctrl+Delete
 bindkey '^R' history-incremental-search-backward    # Ctrl+R
-bindkey "^B^P" proj-widget                          # Ctrl+B p
+bindkey "^B^P" proj-widget                          # Ctrl+B Ctrl+P

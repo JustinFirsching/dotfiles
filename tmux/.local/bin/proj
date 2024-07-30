@@ -70,7 +70,7 @@ function proj() {
     # Use the directory name as the project name
     local proj_name=$(basename -- "$selected_dir")
     if [ -z "$proj_name" ]; then
-        exit
+        return 1
     fi
 
     local session_name=$(__get_tmux_session_name_from_dir "$selected_dir")
