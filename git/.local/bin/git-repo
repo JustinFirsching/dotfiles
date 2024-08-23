@@ -1,0 +1,42 @@
+#!/bin/sh
+
+action=echo
+while getopts ":ho" opt; do
+    case $opt in
+        h)
+            echo "Usage: git repo [-h]"
+            echo "Print the URL of the remote repository"
+            exit 0
+            ;;
+        o)
+            action=xdg-open
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+    esac
+done
+
+remote=$(git remote | head -n 1)
+upstream_url=$(git remote get-url --push $remote)
+
+if [ -z "$upstream_url" ]; then
+    echo "No upstream URL found" >&1
+    exit 1
+fi
+
+clean_url=$(
+    echo "$upstream_url" | \
+    sed -E \
+        -e 's/\.git$//' \
+        -e 's#^(https?://).*@#\1#' \
+        -e 's#^git@(.*):(.*)#https://\1/\2#' -
+)
+
+if [ ! -z "$clean_url" ]; then
+    "$action" "$clean_url"
+else
+    echo "Failed to clean the URL" >&1
+    "$action" "$upstream_url"
+fi
