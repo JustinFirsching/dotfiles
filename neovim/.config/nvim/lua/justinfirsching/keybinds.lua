@@ -9,8 +9,8 @@ vim.keymap.set('n', '<leader>hl', function()
 end)
 
 -- Remap 'p' and 'P' in Visual Mode to not lose the pasted text
-vim.api.nvim_set_keymap('x', 'p', [[pgvy`>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('x', 'P', [[Pgvy`>]], { noremap = true, silent = true })
+vim.keymap.set('x', 'p', [[pgvy`>]], { noremap = true, silent = true })
+vim.keymap.set('x', 'P', [[Pgvy`>]], { noremap = true, silent = true })
 
 -- Always move the the new buffer after a split
 local split_and_move = function(split_cmd)
