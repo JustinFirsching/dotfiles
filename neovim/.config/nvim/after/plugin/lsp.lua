@@ -13,11 +13,19 @@ local lsp_signature_config = {
     select_signature_key = '<C-n>',
 }
 
+local split_to_definition = function(split_cmd)
+    vim.cmd(split_cmd)
+    vim.cmd("wincmd w")
+    vim.lsp.buf.definition()
+end
+
 local lsp_opts = { noremap=true, silent=true }
 local on_attach = function(_, bufnr)
   vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, lsp_opts)
   vim.keymap.set("n", "<leader>gD", vim.lsp.buf.declaration, lsp_opts)
   vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, lsp_opts)
+  vim.keymap.set("n", "<leader>gds", function() split_to_definition("split") end, lsp_opts)
+  vim.keymap.set("n", "<leader>gdv", function() split_to_definition("vsplit") end, lsp_opts)
   vim.keymap.set("n", "K", vim.lsp.buf.hover, lsp_opts)
   vim.keymap.set("n", "<leader>i", vim.lsp.buf.implementation, lsp_opts)
   vim.keymap.set("n", "]d", vim.diagnostic.goto_next, lsp_opts)
