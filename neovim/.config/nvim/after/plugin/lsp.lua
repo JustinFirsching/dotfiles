@@ -89,7 +89,7 @@ local servers = {
     lua_ls = true, -- Lua
     tailwindcss = true, -- Tailwind (CSS)
     texlab = true, -- TeX (LaTeX)
-    tsserver = true, -- TypeScript
+    ts_ls = true, -- TypeScript
     yamlls = true, -- YAML
 }
 
