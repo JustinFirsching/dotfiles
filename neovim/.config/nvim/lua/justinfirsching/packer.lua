@@ -25,7 +25,10 @@ return require('packer').startup(function(use)
   -- Java LSP
   use 'mfussenegger/nvim-jdtls'
   -- C# LSP
-  use 'Hoffs/omnisharp-extended-lsp.nvim'
+  use {
+      'seblj/roslyn.nvim',
+      -- ft = 'cs', -- This is ideal, but breaks the lsp config in after/
+  }
   -- Linters
   use 'mfussenegger/nvim-lint'
   -- Formatters

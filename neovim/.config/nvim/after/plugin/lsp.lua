@@ -64,25 +64,6 @@ local servers = {
     jdtls = true, -- Java
     jsonls = true, -- JSON
     kotlin_language_server = true, -- Kotlin
-    omnisharp = {
-        cmd = {
-            "omnisharp"
-            -- "dotnet",
-            -- os.getenv("HOME") .. "/.local/share/nvim/mason/packages/omnisharp/libexec/OmniSharp.dll"
-        },
-        on_attach = function(client, bufnr)
-            -- Do the default on_attach
-            on_attach(client, bufnr)
-
-            -- Then fix the keymaps
-            local has_omnisharp, omnisharp_extended = pcall(require, 'omnisharp_extended')
-            if has_omnisharp then
-                vim.keymap.set("n", "<leader>gd", omnisharp_extended.lsp_definition, lsp_opts)
-                vim.keymap.set("n", "<leader>i", omnisharp_extended.lsp_implementation, lsp_opts)
-                vim.keymap.set("n", "<leader>rr", omnisharp_extended.lsp_references, lsp_opts)
-            end
-        end,
-    }, -- C#
     pyright = true, -- Python
     rust_analyzer = true, -- Rust
     sqlls = true, -- SQL
@@ -117,3 +98,17 @@ local setup_servers = function()
 end
 
 setup_servers()
+
+-- Of course C# has to be special...
+local has_roslyn, roslyn = pcall(require, 'roslyn')
+if has_roslyn then
+    roslyn.setup {
+        exe = {
+            vim.fn.stdpath('data') .. "/mason/bin/roslyn"
+        },
+        config = {
+            on_attach = on_attach,
+            capabilities = require("cmp_nvim_lsp").default_capabilities(),
+        }
+    }
+end
