@@ -1,0 +1,43 @@
+#!/bin/sh
+
+# git-reauthor
+# Reauthor the last commit with the specified name and email.
+# If no name or email is provided, the current user's name and email will be used.
+# If the -k flag is provided, the authorship will be kept the same where a new value is not provided.
+# If the -k flag is not provided, the authorship will be set to the current user.
+
+name=
+email=
+name_default=$(git config user.name)
+email_default=$(git config user.email)
+while getopts ":e:khn:" opt; do
+    case $opt in
+        e)
+            email=$OPTARG
+            ;;
+        h)
+            echo "Usage: git reauthor [-h] [-k] [-n NAME] [-e EMAIL]"
+            echo "  -h  Show this help message"
+            echo "  -k  Keep the commit authorship the same where a new value is not provided"
+            echo "  -n  Set the commit author name"
+            echo "  -e  Set the commit author email"
+            echo "If -k is not provided, the authorship will be set to the current user."
+            ;;
+        k)
+            name_default=$(git show --pretty=format:"%an" -q HEAD)
+            email_default=$(git show --pretty=format:"%ae" -q HEAD)
+            ;;
+        n)
+            name=$OPTARG
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+    esac
+done
+
+name=${name:-$name_default}
+email=${email:-$email_default}
+
+echo git -c user.name="$name" -c user.email="$email" commit --amend --no-edit --author="$name <$email>"
