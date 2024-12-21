@@ -52,7 +52,9 @@ return require('packer').startup(function(use)
     requires = {
       -- Snippet Collection
       'rafamadriz/friendly-snippets',
-    }
+    },
+    tag = 'v2.*',
+    run = 'make install_jsregexp'
   }
   use 'tpope/vim-fugitive' -- Git Integration
   use 'lewis6991/gitsigns.nvim' -- Git Indicate Line Changes
