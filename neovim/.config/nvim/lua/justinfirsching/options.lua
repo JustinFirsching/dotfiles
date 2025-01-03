@@ -11,6 +11,7 @@ vim.opt.errorbells = false
 vim.opt.swapfile = false
 vim.opt.wrap = false
 vim.opt.number = true
+vim.opt.pumheight = 20
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 3
 vim.opt.shiftwidth = 4
