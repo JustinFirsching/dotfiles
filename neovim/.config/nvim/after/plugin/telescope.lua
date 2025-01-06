@@ -75,13 +75,13 @@ require("telescope").setup{
     mappings = {
       i = {
         ["<C-c>"] = false,
-        ["<C-e>"] = create_new_file,
-        ["<C-d>"] = delete_file,
+        ["<M-e>"] = create_new_file,
+        ["<M-d>"] = delete_file,
       },
       n = {
         ["<C-c>"] = actions.close,
-        ["<C-e>"] = create_new_file,
-        ["<C-d>"] = delete_file,
+        ["<M-e>"] = create_new_file,
+        ["<M-d>"] = delete_file,
       }
     },
     vimgrep_arguments = {
