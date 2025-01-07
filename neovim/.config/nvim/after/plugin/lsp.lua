@@ -3,16 +3,6 @@ if not has_lsp then
     return nil
 end
 
-local lsp_signature_config = {
-    hint_prefix = '',
-    -- This is annoying... inline text should be for errors only
-    hint_inline = function() return false end,
-    handler_opts = {
-        border = 'none'
-    },
-    select_signature_key = '<C-n>',
-}
-
 local split_to_definition = function(split_cmd)
     vim.cmd(split_cmd)
     vim.cmd("wincmd w")
@@ -34,6 +24,7 @@ local on_attach = function(_, bufnr)
   vim.keymap.set("n", "<leader>rr", vim.lsp.buf.references, lsp_opts)
   vim.keymap.set("n", "<leader>sd", vim.diagnostic.open_float, lsp_opts)
   vim.keymap.set("n", "<leader>sh", vim.lsp.buf.signature_help, lsp_opts)
+  vim.keymap.set({"n", "i"}, "<M-k>", vim.lsp.buf.signature_help, lsp_opts)
 
   local has_telescope, builtin = pcall(require, 'telescope.builtin')
   if has_telescope then
@@ -45,11 +36,6 @@ local on_attach = function(_, bufnr)
     vim.keymap.set("n", "<leader>wf", function() builtin.lsp_workspace_symbols{ symbols={"Function", "Method"} } end, lsp_opts)
     -- Find Project Classes, Enums and Structs
     vim.keymap.set("n", "<leader>wc", function() builtin.lsp_workspace_symbols{ symbols={"Class", "Enum", "Struct"} } end, lsp_opts)
-  end
-
-  local has_lsp_signature, lsp_signature = pcall(require, 'lsp_signature')
-  if has_lsp_signature then
-      lsp_signature.on_attach(lsp_signature_config, bufnr)
   end
 end
 

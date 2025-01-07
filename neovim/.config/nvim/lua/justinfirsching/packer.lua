@@ -40,7 +40,6 @@ return require('packer').startup(function(use)
     'hrsh7th/nvim-cmp',
     requires = {
       'hrsh7th/cmp-nvim-lsp',
-      'ray-x/lsp_signature.nvim',
       'hrsh7th/cmp-buffer',
       'saadparwaiz1/cmp_luasnip',
       'zbirenbaum/copilot-cmp',
