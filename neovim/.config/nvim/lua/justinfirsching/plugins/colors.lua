@@ -18,8 +18,8 @@ return {
         vim.cmd.colorscheme('gruvbox')
 
         local highlight_groups = {
-            Normal = { bg = 'none', ctermbg = 'none' },
-            NormalFloat = { bg = 'none', ctermbg = 'none' },
+            Normal = { bg = 'none' },
+            NormalFloat = { bg = 'none' },
         }
 
         for group, styles in pairs(highlight_groups) do
