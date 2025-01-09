@@ -3,16 +3,9 @@ return {
     lazy = false,
     priority = 1000,
     config = function()
-        local function set_gruvbox()
-            vim.g.gruvbox_contrast_dark = "hard"
-            vim.g.gruvbox_transparent_bg = true
-            vim.cmd.colorscheme("gruvbox")
-        end
-
-        local has_gruvbox = pcall(set_gruvbox)
-        if not has_gruvbox then
-            vim.cmd.colorscheme("habamax")
-        end
+        vim.g.gruvbox_contrast_dark = "hard"
+        vim.g.gruvbox_transparent_bg = true
+        vim.cmd.colorscheme("gruvbox")
 
         vim.opt.background = "dark"
 
