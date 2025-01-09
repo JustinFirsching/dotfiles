@@ -1,5 +1,5 @@
 -- Clear trailing whitespace on save
-vim.api.nvim_create_autocmd({'BufWritePre'}, {
+vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
     pattern = { "*" },
     callback = function(ev)
         if vim.bo.filetype ~= 'markdown' then
@@ -14,13 +14,13 @@ vim.api.nvim_create_autocmd({'BufWritePre'}, {
 })
 
 -- Load updates to Xresources
-vim.api.nvim_create_autocmd({'BufWritePost'}, {
+vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
     pattern = { ".Xresources" },
     command = "silent !xrdb %"
 })
 
 -- Disable diagnostics in popup windows
-vim.api.nvim_create_autocmd({'BufEnter'}, {
+vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     pattern = { "*" },
     callback = function()
         if vim.bo.buftype == "nofile" then
@@ -30,7 +30,7 @@ vim.api.nvim_create_autocmd({'BufEnter'}, {
 })
 
 -- Enable diagostics when leaving popup windows
-vim.api.nvim_create_autocmd({'BufLeave'}, {
+vim.api.nvim_create_autocmd({ 'BufLeave' }, {
     pattern = { "*" },
     callback = function()
         if vim.bo.buftype == "nofile" then

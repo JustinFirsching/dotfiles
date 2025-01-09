@@ -1,5 +1,3 @@
-vim.g.mapleader = " "
-
 -- Exit Insert Mode
 vim.keymap.set('i', '<C-c>', '<Esc>')
 
@@ -17,11 +15,11 @@ local split_and_move = function(split_cmd)
     vim.cmd(split_cmd)
     vim.cmd("wincmd w")
 end
-vim.keymap.set({'v', 'n', 'o'}, '<C-W>s', function() split_and_move("split") end, { noremap = true, silent = true })
-vim.keymap.set({'v', 'n', 'o'}, '<C-W>v', function() split_and_move("vsplit") end, { noremap = true, silent = true })
+vim.keymap.set({ 'v', 'n', 'o' }, '<C-W>s', function() split_and_move("split") end, { noremap = true, silent = true })
+vim.keymap.set({ 'v', 'n', 'o' }, '<C-W>v', function() split_and_move("vsplit") end, { noremap = true, silent = true })
 
 -- Shortcut for :vnew
-vim.keymap.set({'v', 'n', 'o'}, '<C-W>V', function()
+vim.keymap.set({ 'v', 'n', 'o' }, '<C-W>V', function()
     -- Split the window vertically with a new buffer
     vim.cmd("vnew")
     -- This is just to make the buffer open to the right
