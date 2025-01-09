@@ -1,16 +1,29 @@
 return {
-    'morhetz/gruvbox',
+    'ellisonleao/gruvbox.nvim',
     lazy = false,
     priority = 1000,
     config = function()
-        vim.g.gruvbox_contrast_dark = "hard"
-        vim.g.gruvbox_transparent_bg = true
-        vim.cmd.colorscheme("gruvbox")
+        require('gruvbox').setup({
+            contrast = 'hard',
+            transparent_mode = false,
+            italic = {
+                strings = false,
+                emphasis = false,
+                comments = false,
+                operators = false,
+                folds = false,
+            },
+        })
 
-        vim.opt.background = "dark"
+        vim.cmd.colorscheme('gruvbox')
 
-        local hl_opts = { bg = "none", ctermbg = "none" }
-        vim.api.nvim_set_hl(0, "Normal", hl_opts)
-        vim.api.nvim_set_hl(0, "NormalFloat", hl_opts)
-    end
+        local highlight_groups = {
+            Normal = { bg = 'none', ctermbg = 'none' },
+            NormalFloat = { bg = 'none', ctermbg = 'none' },
+        }
+
+        for group, styles in pairs(highlight_groups) do
+            vim.api.nvim_set_hl(0, group, styles)
+        end
+    end,
 }
