@@ -14,35 +14,35 @@ return {
             vim.lsp.buf.definition()
         end
 
-        local lsp_opts = { noremap = true, silent = true }
+        local map_opts = { noremap = true, silent = true }
         local on_attach = function(_, bufnr)
-            vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, lsp_opts)
-            vim.keymap.set("n", "<leader>gD", vim.lsp.buf.declaration, lsp_opts)
-            vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, lsp_opts)
-            vim.keymap.set("n", "<leader>gds", function() split_to_definition("split") end, lsp_opts)
-            vim.keymap.set("n", "<leader>gdv", function() split_to_definition("vsplit") end, lsp_opts)
-            vim.keymap.set("n", "K", vim.lsp.buf.hover, lsp_opts)
-            vim.keymap.set("n", "<leader>i", vim.lsp.buf.implementation, lsp_opts)
-            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, lsp_opts)
-            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, lsp_opts)
-            vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, lsp_opts)
-            vim.keymap.set("n", "<leader>rr", vim.lsp.buf.references, lsp_opts)
-            vim.keymap.set("n", "<leader>sd", vim.diagnostic.open_float, lsp_opts)
-            vim.keymap.set("n", "<leader>sh", vim.lsp.buf.signature_help, lsp_opts)
-            vim.keymap.set({ "n", "i" }, "<M-k>", vim.lsp.buf.signature_help, lsp_opts)
+            vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, map_opts)
+            vim.keymap.set("n", "<leader>gD", vim.lsp.buf.declaration, map_opts)
+            vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, map_opts)
+            vim.keymap.set("n", "<leader>gds", function() split_to_definition("split") end, map_opts)
+            vim.keymap.set("n", "<leader>gdv", function() split_to_definition("vsplit") end, map_opts)
+            vim.keymap.set("n", "K", vim.lsp.buf.hover, map_opts)
+            vim.keymap.set("n", "<leader>i", vim.lsp.buf.implementation, map_opts)
+            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, map_opts)
+            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, map_opts)
+            vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, map_opts)
+            vim.keymap.set("n", "<leader>rr", vim.lsp.buf.references, map_opts)
+            vim.keymap.set("n", "<leader>sd", vim.diagnostic.open_float, map_opts)
+            vim.keymap.set("n", "<leader>sh", vim.lsp.buf.signature_help, map_opts)
+            vim.keymap.set({ "n", "i" }, "<M-k>", vim.lsp.buf.signature_help, map_opts)
 
             local has_telescope, builtin = pcall(require, 'telescope.builtin')
             if has_telescope then
                 -- Find Document Symbols
-                vim.keymap.set("n", "<leader>ds", builtin.lsp_document_symbols, lsp_opts)
+                vim.keymap.set("n", "<leader>ds", builtin.lsp_document_symbols, map_opts)
                 -- Find Project Symbols (This will probably run slow, lsp_opts)
-                vim.keymap.set("n", "<leader>ws", builtin.lsp_dynamic_workspace_symbols, lsp_opts)
+                vim.keymap.set("n", "<leader>ws", builtin.lsp_dynamic_workspace_symbols, map_opts)
                 -- Find Project Functions and Methods
                 vim.keymap.set("n", "<leader>wf",
-                    function() builtin.lsp_workspace_symbols { symbols = { "Function", "Method" } } end, lsp_opts)
+                    function() builtin.lsp_workspace_symbols { symbols = { "Function", "Method" } } end, map_opts)
                 -- Find Project Classes, Enums and Structs
                 vim.keymap.set("n", "<leader>wc",
-                    function() builtin.lsp_workspace_symbols { symbols = { "Class", "Enum", "Struct" } } end, lsp_opts)
+                    function() builtin.lsp_workspace_symbols { symbols = { "Class", "Enum", "Struct" } } end, map_opts)
             end
         end
 
