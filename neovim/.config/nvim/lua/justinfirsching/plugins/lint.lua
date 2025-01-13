@@ -12,7 +12,9 @@ return {
         -- Run linter when changing windows
         vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave', 'TextChanged', 'BufWritePost' }, {
             callback = function()
-                lint.try_lint()
+                if vim.bo.buftype ~= "nofile" then
+                    lint.try_lint()
+                end
             end,
         })
     end
