@@ -18,23 +18,3 @@ vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
     pattern = { ".Xresources" },
     command = "silent !xrdb %"
 })
-
--- Disable diagnostics in popup windows
-vim.api.nvim_create_autocmd({ 'BufEnter' }, {
-    pattern = { "*" },
-    callback = function()
-        if vim.bo.buftype == "nofile" then
-            vim.diagnostic.enable(false)
-        end
-    end
-})
-
--- Enable diagostics when leaving popup windows
-vim.api.nvim_create_autocmd({ 'BufLeave' }, {
-    pattern = { "*" },
-    callback = function()
-        if vim.bo.buftype == "nofile" then
-            vim.diagnostic.enable(true)
-        end
-    end
-})
