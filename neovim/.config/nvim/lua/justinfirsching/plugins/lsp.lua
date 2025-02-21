@@ -23,8 +23,6 @@ return {
             vim.keymap.set("n", "<leader>gdv", function() split_to_definition("vsplit") end, map_opts)
             vim.keymap.set("n", "K", vim.lsp.buf.hover, map_opts)
             vim.keymap.set("n", "<leader>i", vim.lsp.buf.implementation, map_opts)
-            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, map_opts)
-            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, map_opts)
             vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, map_opts)
             vim.keymap.set("n", "<leader>rr", vim.lsp.buf.references, map_opts)
             vim.keymap.set("n", "<leader>sd", vim.diagnostic.open_float, map_opts)
