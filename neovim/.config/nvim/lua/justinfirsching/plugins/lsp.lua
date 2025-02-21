@@ -100,6 +100,12 @@ return {
                 config = {
                     on_attach = on_attach,
                     capabilities = require("cmp_nvim_lsp").default_capabilities(),
+                    handlers = {
+                        ["razor/provideDynamicFileInfo"] = function(_, _, _)
+                            -- This is just to mute out the Roslyn vim.notify
+                            return vim.NIL
+                        end
+                    }
                 }
             }
         end
