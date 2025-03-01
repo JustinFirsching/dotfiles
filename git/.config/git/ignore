@@ -1,2 +1,4 @@
 # Directory configuration
 .dirrc
+.env
+.env.*.local
