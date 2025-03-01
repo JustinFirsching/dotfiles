@@ -32,5 +32,6 @@ return {
                 { name = 'copilot' },
             },
         })
+        require("copilot_cmp").setup()
     end
 }
