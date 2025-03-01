@@ -1,9 +1,10 @@
 return {
-    'nvim-telescope/telescope.nvim',
+    "nvim-telescope/telescope.nvim",
+    branch = "0.1.x",
     dependencies = {
-        'nvim-lua/plenary.nvim',
-        'BurntSushi/ripgrep',
-        'nvim-telescope/telescope-fzf-native.nvim',
+        "nvim-lua/plenary.nvim",
+        "BurntSushi/ripgrep",
+        "nvim-telescope/telescope-fzf-native.nvim",
     },
     config = function()
         local telescope = require("telescope")
@@ -73,19 +74,15 @@ return {
             delete_up(Path:new(file))
         end
 
-        require("telescope").setup {
+        telescope.setup {
             defaults = {
                 layout_strategy = "vertical",
                 mappings = {
                     i = {
                         ["<C-c>"] = false,
-                        ["<M-e>"] = create_new_file,
-                        ["<M-d>"] = delete_file,
                     },
                     n = {
                         ["<C-c>"] = actions.close,
-                        ["<M-e>"] = create_new_file,
-                        ["<M-d>"] = delete_file,
                     }
                 },
                 vimgrep_arguments = {
@@ -115,6 +112,16 @@ return {
                         "node_modules",
                         "--exclude",
                         ".venv"
+                    },
+                    mappings = {
+                        i = {
+                            ["<C-e>"] = create_new_file,
+                            ["<C-x>"] = delete_file,
+                        },
+                        n = {
+                            ["<C-e>"] = create_new_file,
+                            ["<C-x>"] = delete_file,
+                        }
                     }
                 },
             }
