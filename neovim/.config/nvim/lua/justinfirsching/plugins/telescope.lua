@@ -4,7 +4,7 @@ return {
     dependencies = {
         "nvim-lua/plenary.nvim",
         "BurntSushi/ripgrep",
-        "nvim-telescope/telescope-fzf-native.nvim",
+        { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     },
     config = function()
         local telescope = require("telescope")
@@ -126,6 +126,8 @@ return {
                 },
             }
         }
+
+        telescope.load_extension("fzf")
 
         -- Keybinds
         local builtin = require("telescope.builtin")
