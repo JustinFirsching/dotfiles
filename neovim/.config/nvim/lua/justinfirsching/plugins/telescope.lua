@@ -135,5 +135,11 @@ return {
         vim.keymap.set("n", "<leader>rb", builtin.buffers)
         vim.keymap.set("n", "<leader>ro", builtin.oldfiles)
         vim.keymap.set("n", "<leader>ps", builtin.live_grep)
+        vim.keymap.set("n", "<leader>ds", builtin.lsp_document_symbols)
+        vim.keymap.set("n", "<leader>ws", builtin.lsp_dynamic_workspace_symbols)
+        vim.keymap.set("n", "<leader>gd", builtin.lsp_definitions)
+        vim.keymap.set("n", "<leader>rr", builtin.lsp_references)
+        vim.keymap.set("n", "<leader>i", builtin.lsp_implementations)
+        vim.keymap.set("n", "<leader>wtf", function() print(vim.lsp.get_clients()[1].offset_encoding) end)
     end
 }
