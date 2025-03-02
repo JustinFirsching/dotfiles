@@ -39,7 +39,9 @@ function __get_tmux_session_name_from_dir() {
 
     local session_name=$base_dir
     # This sed replaces each directory with the first letter of its name.
-    [ "$num_common_basenames" -gt 1 ] && session_name=$(sed 's#\(.\)[^/]*/#\1/#g' <<< "$dirname")
+    if [ "$num_common_basenames" -gt 1 ]; then
+        session_name=$(sed -e 's#\([^/]\)[^/]*/#\1/#g' <<< "$dirname")
+    fi
     echo $session_name
 }
 
