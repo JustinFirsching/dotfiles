@@ -42,7 +42,7 @@ function __get_tmux_session_name_from_dir() {
     if [ "$num_common_basenames" -gt 1 ]; then
         session_name=$(sed -e 's#\([^/]\)[^/]*/#\1/#g' <<< "$dirname")
     fi
-    echo $session_name
+    tr '.' '_' <<< "$session_name"
 }
 
 function __create_session() {
