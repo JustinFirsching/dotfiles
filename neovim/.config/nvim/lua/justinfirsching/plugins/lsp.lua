@@ -3,7 +3,6 @@ return {
     dependencies = {
         'mfussenegger/nvim-jdtls',           -- Java LSP
         'seblj/roslyn.nvim',                 -- C# LSP
-        'nvim-telescope/telescope.nvim',     -- Searcher
         'hrsh7th/cmp-nvim-lsp',              -- LSP Autocompletion
         'williamboman/mason.nvim',           -- External Tool Installer
         'williamboman/mason-lspconfig.nvim', -- LSP Installer
