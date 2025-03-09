@@ -45,6 +45,7 @@ return {
                 sort_lastused = true,
             },
             grep = {
+                rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 -g !.git -e",
                 hidden = true,
                 no_ignore = false,
             },
