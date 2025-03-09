@@ -58,7 +58,7 @@ return {
         map_key("n", "<leader>rf", fzf_lua.files)
         map_key("n", "<leader>rb", fzf_lua.buffers)
         map_key("n", "<leader>ro", fzf_lua.oldfiles)
-        map_key("n", "<leader>ps", fzf_lua.live_grep)
+        map_key("n", "<leader>ps", fzf_lua.live_grep_native)
         map_key("n", "<leader>prs", fzf_lua.live_grep_resume)
         map_key("n", "<leader>ds", fzf_lua.lsp_document_symbols)
         map_key("n", "<leader>ws", fzf_lua.lsp_live_workspace_symbols)
