@@ -37,6 +37,7 @@ return {
                         reload = true,
                     },
                 },
+                hidden = true,
                 no_ignore = false,
             },
             buffers = {
@@ -44,6 +45,7 @@ return {
                 sort_lastused = true,
             },
             grep = {
+                hidden = true,
                 no_ignore = false,
             },
             oldfiles = {
