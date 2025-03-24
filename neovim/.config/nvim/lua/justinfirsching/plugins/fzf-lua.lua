@@ -6,6 +6,7 @@ return {
     config = function()
         local fzf_lua = require("fzf-lua")
         local utils = require("justinfirsching.utils")
+
         fzf_lua.setup({
             files = {
                 actions = {
@@ -39,6 +40,11 @@ return {
                 },
                 hidden = true,
                 no_ignore = false,
+            },
+            keymap = {
+                fzf = {
+                    ["ctrl-q"] = "select-all+accept",
+                },
             },
             buffers = {
                 ignore_current_buffer = true,
