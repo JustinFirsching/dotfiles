@@ -10,7 +10,7 @@ compinit
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=100000
-setopt autocd extendedglob histignorespace
+setopt autocd extendedglob appendhistory histignorespace histreduceblanks incappendhistory
 # End of lines configured by zsh-newuser-install
 
 if [[ -f ~/.zprofile ]]; then
