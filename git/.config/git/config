@@ -21,3 +21,5 @@
 [fetch]
 	prune = true
 	pruneTags = true
+[alias]
+    uncommit = reset --soft HEAD^
