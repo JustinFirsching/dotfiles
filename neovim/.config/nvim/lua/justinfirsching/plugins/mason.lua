@@ -1,7 +1,7 @@
 return {
     'williamboman/mason.nvim',               -- External Tool Installer
     dependencies = {
-        'williamboman/mason-lspconfig.nvim', -- LSP Installer
+        'williamboman/mason-lspconfig.nvim', -- LSP Setup Tool
     },
     opts = {
         registries = {
@@ -11,7 +11,7 @@ return {
         ensure_installed = {
             -- LSP
             "gopls",               -- Go LSP
-            "pyright",             -- Python LSP
+            "basedpyright",        -- Python LSP
             "lua-language-server", -- Lua
             -- Lint
             "golangci-lint",

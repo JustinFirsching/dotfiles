@@ -14,6 +14,18 @@ return {
                     capabilities = vim.lsp.protocol.make_client_capabilities(),
                 }
             end,
+            ["basedpyright"] = function()
+                require("lspconfig").basedpyright.setup {
+                    capabilities = vim.lsp.protocol.make_client_capabilities(),
+                    settings = {
+                        basedpyright = {
+                            analysis = {
+                                typeCheckingMode = "basic" -- Parity with VS Code
+                            },
+                        },
+                    },
+                }
+            end
         }
 
         require("roslyn").setup {
