@@ -12,7 +12,7 @@ return {
             keymap = {
                 -- Enter to accept, but tab to accept the first completion without selection
                 preset = 'enter',
-                ['<Tab>'] = { 'accept', function(cmp) cmp.accept({ index = 1 }) end },
+                ['<Tab>'] = { 'accept', function(cmp) cmp.accept({ index = 1 }) end, 'fallback' },
             },
             appearance = {
                 -- nerd_font_variant = '',
