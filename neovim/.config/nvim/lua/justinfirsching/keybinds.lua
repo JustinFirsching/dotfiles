@@ -49,7 +49,7 @@ map_key("n", "K", vim.lsp.buf.hover)
 map_key("n", "<leader>rn", vim.lsp.buf.rename)
 map_key("n", "<leader>sd", vim.diagnostic.open_float)
 map_key("n", "<leader>sh", vim.lsp.buf.signature_help)
-map_key({ "n", "i" }, "<M-k>", vim.lsp.buf.signature_help)
+map_key({ "n", "i" }, "<C-k>", vim.lsp.buf.signature_help)
 
 -- Open URLs in the browser
 map_key("n", "gf", function()
