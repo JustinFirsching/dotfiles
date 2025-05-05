@@ -62,17 +62,16 @@ return {
         })
 
         local map_key = require("justinfirsching.utils").map_key
-        map_key("n", "<leader>rf", fzf_lua.files)
-        map_key("n", "<leader>rb", fzf_lua.buffers)
-        map_key("n", "<leader>ro", fzf_lua.oldfiles)
-        map_key("n", "<leader>ps", fzf_lua.live_grep_native)
-        map_key("n", "<leader>prs", fzf_lua.live_grep_resume)
-        map_key("n", "<leader>ds", fzf_lua.lsp_document_symbols)
-        map_key("n", "<leader>ws", fzf_lua.lsp_live_workspace_symbols)
+        map_key("n", "<leader>sf", fzf_lua.files)
+        map_key("n", "<leader>sb", fzf_lua.buffers)
+        map_key("n", "<leader>so", fzf_lua.oldfiles)
+        map_key("n", "<leader>sp", fzf_lua.live_grep_native)
+        map_key("n", "<leader>sd", fzf_lua.lsp_document_symbols)
+        map_key("n", "<leader>sw", fzf_lua.lsp_live_workspace_symbols)
         map_key("n", "<leader>gd", fzf_lua.lsp_definitions)
-        map_key("n", "<leader>rr", fzf_lua.lsp_references)
+        map_key("n", "<leader>gr", fzf_lua.lsp_references)
         map_key("n", "<leader>i", fzf_lua.lsp_implementations)
         map_key("n", "<leader>ci", fzf_lua.lsp_incoming_calls)
-        map_key("n", "<leader>ci", fzf_lua.lsp_outgoing_calls)
+        map_key("n", "<leader>co", fzf_lua.lsp_outgoing_calls)
     end
 }
