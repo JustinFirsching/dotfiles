@@ -56,9 +56,9 @@ return {
                         async = true,
                     },
                     cmdline = {
-                        -- Disable the cmdline completion if the command starts with !
+                        -- ignores cmdline completions when executing shell commands
                         enabled = function()
-                            return vim.fn.getcmdline():match("^%s*(.-)%s*$"):sub(1, 1) ~= "!"
+                            return vim.fn.getcmdtype() ~= ':' or not vim.fn.getcmdline():match("^[%%0-9,'<>%-]*!")
                         end,
                     },
                 },
