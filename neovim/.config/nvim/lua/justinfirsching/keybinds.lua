@@ -38,6 +38,13 @@ end)
 -- Move between diagnostics
 map_key("n", "]d", vim.diagnostic.goto_next)
 map_key("n", "[d", vim.diagnostic.goto_prev)
+map_key("n", "<leader>d", vim.diagnostic.open_float)
+map_key("n", "<leader>dq", vim.diagnostic.setqflist)
+map_key("n", "<leader>ds", function()
+  local new_config = not vim.diagnostic.config().virtual_lines
+  vim.diagnostic.config({ virtual_lines = new_config })
+end
+)
 
 -- LSP
 map_key("n", "<leader>ca", vim.lsp.buf.code_action)
