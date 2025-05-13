@@ -29,7 +29,7 @@ return {
         }
 
         require("roslyn").setup {
-            exe = {
+            cmd = {
                 vim.fn.stdpath('data') .. "/mason/bin/roslyn"
             },
             config = {
