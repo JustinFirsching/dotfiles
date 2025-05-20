@@ -1,23 +1,25 @@
 return {
-    'williamboman/mason.nvim',               -- External Tool Installer
-    dependencies = {
-        'williamboman/mason-lspconfig.nvim', -- LSP Setup Tool
+    {
+        "mason-org/mason.nvim",
+        opts = {
+            registries = {
+                "github:mason-org/mason-registry",
+                "github:Crashdummyy/mason-registry",
+            },
+        }
     },
-    opts = {
-        registries = {
-            "github:mason-org/mason-registry",
-            "github:Crashdummyy/mason-registry",
+    {
+        "mason-org/mason-lspconfig.nvim",
+        dependencies = {
+            "mason-org/mason.nvim",
+            "neovim/nvim-lspconfig",
         },
-        ensure_installed = {
-            -- LSP
-            "gopls",               -- Go LSP
-            "basedpyright",        -- Python LSP
-            "lua-language-server", -- Lua
-            -- Lint
-            "golangci-lint",
-            "markdownlint",
-            "jsonlint",
-            "yamllint",
+        opts = {
+            ensure_installed = {
+                "gopls",        -- Go LSP
+                "basedpyright", -- Python LSP
+                "lua_ls",       -- Lua
+            },
         },
-    },
+    }
 }
