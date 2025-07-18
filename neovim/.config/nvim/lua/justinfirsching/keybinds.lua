@@ -67,3 +67,17 @@ map_key("n", "gf", function()
         vim.cmd("edit " .. url)
     end
 end)
+
+-- Toggle wrapping
+map_key({ "v", "n", "o" }, "<leader>tw", function()
+    vim.opt.wrap = not vim.opt.wrap:get()
+    if vim.opt.wrap:get() then
+        vim.cmd("set wrap")
+        map_key({ 'v', 'n', 'o' }, 'j', 'gj', { buffer = 0 })
+        map_key({ 'v', 'n', 'o' }, 'k', 'gk', { buffer = 0 })
+    else
+        vim.cmd("set nowrap")
+        map_key({ 'v', 'n', 'o' }, 'j', 'j', { buffer = 0 })
+        map_key({ 'v', 'n', 'o' }, 'k', 'k', { buffer = 0 })
+    end
+end)
