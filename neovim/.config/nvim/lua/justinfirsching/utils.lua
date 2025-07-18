@@ -1,7 +1,8 @@
 local M = {}
 
 M.map_key = function(modes, lhs, rhs, opts)
-    opts = opts or { noremap = true, silent = true }
+    local default_opts = { noremap = true, silent = true }
+    opts = vim.tbl_deep_extend("force", default_opts, opts or {})
     vim.keymap.set(modes, lhs, rhs, opts)
 end
 
