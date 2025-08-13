@@ -12,4 +12,4 @@ precmd_functions+=(vcs_info)
 setopt prompt_subst
 
 # Config for the prompt. PS1 synonym.
-export PS1='%n@%M:%c${vcs_info_msg_0_}$ '
+export PS1='%n@%m:%c${vcs_info_msg_0_}$ '
