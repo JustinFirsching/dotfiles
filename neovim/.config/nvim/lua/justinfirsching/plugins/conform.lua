@@ -4,15 +4,15 @@ return {
         local conform = require('conform')
         conform.setup({
             formatters_by_ft = {
-                css = { "prettier" },
-                html = { "prettier" },
-                javascript = { "prettier" },
-                json = { "prettier" },
-                jsx = { "prettier" },
-                markdown = { "prettier" },
+                css = { "prettierd" },
+                html = { "prettierd" },
+                javascript = { "prettierd" },
+                json = { "prettierd" },
+                jsx = { "prettierd" },
+                markdown = { "prettierd" },
                 python = { "isort", "black" },
-                typescript = { "prettier" },
-                yaml = { "prettier" },
+                typescript = { "prettierd" },
+                yaml = { "prettierd" },
             },
             default_format_opts = {
                 lsp_format = true,
