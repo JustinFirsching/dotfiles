@@ -9,6 +9,11 @@ return {
             markdown = { 'markdownlint', },
         }
 
+        lint.linters.markdownlint.args = {
+            "--config",
+            vim.fn.expand("~/.config/.markdownlint.jsonc"),
+        }
+
         -- Run linter when changing windows
         vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave', 'TextChanged', 'BufWritePost' }, {
             callback = function()
