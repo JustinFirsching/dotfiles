@@ -8,10 +8,11 @@ return {
                 html = { "prettierd" },
                 javascript = { "prettierd" },
                 json = { "prettierd" },
-                jsx = { "prettierd" },
+                javascriptreact = { "prettierd" },
                 markdown = { "prettierd" },
                 python = { "isort", "black" },
                 typescript = { "prettierd" },
+                typescriptreact = { "prettierd" },
                 yaml = { "prettierd" },
             },
             default_format_opts = {
