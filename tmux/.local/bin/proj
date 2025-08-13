@@ -7,7 +7,7 @@ PROJECT_DIRS=(
 function find_projects() {
     SRC_DIRS=${SRC_DIRS:-"$HOME/src"}
 
-    local project_dirs=$(find $SRC_DIRS -mindepth 1 -maxdepth 1 -type d,l 2>/dev/null | sort)
+    local project_dirs=$(find $SRC_DIRS -mindepth 1 -maxdepth 1 -type d,l 2>/dev/null)
     if [ -z "$project_dirs" ]; then
         >&2 echo "No projects found! Project directories searched: $SRC_DIRS"
         return 1
@@ -15,7 +15,7 @@ function find_projects() {
         echo "$project_dirs"
         for project_dir in "${PROJECT_DIRS[@]}"; do
             if [ -d "$project_dir" ]; then
-                echo $project_dir
+                echo "$project_dir"
             fi
         done
     fi
@@ -23,7 +23,7 @@ function find_projects() {
 
 function __select_project() {
     local query=$1
-    local project_dirs=$(sort - <<< $(find_projects))
+    local project_dirs=$(find_projects | sort)
     fzf --filepath-word --query="$query" -1 <<< "$project_dirs"
 }
 
