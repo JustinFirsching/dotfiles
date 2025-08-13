@@ -4,8 +4,6 @@
 	signingkey = 6D2DBF40ED8F62AB
 [commit]
 	gpgsign = true
-[gpg]
-	program = /usr/bin/gpg
 [init]
 	defaultBranch = master
 [credential]
