@@ -11,3 +11,7 @@ fi
 if [ -d /opt/homebrew/opt/coreutils ]; then
     export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 fi
+
+if [ -d /opt/homebrew/opt/python/libexec/bin ]; then
+    export PATH="/opt/homebrew/opt/python/libexec/bin:$PATH"
+fi
