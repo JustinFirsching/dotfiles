@@ -36,8 +36,15 @@ map_key({ 'v', 'n', 'o' }, '<C-W>V', function()
 end)
 
 -- Move between diagnostics
-map_key("n", "]d", vim.diagnostic.goto_next)
-map_key("n", "[d", vim.diagnostic.goto_prev)
+map_key("n", "]d", function() vim.diagnostic.jump {count=1, float=true} end)
+map_key("n", "[d", function() vim.diagnostic.jump {count=-1, float=true} end)
+-- Move between warnings and errors
+map_key("n", "]w", function() vim.diagnostic.jump {count=1, float=true, severity={ min = vim.diagnostic.severity.WARN}} end)
+map_key("n", "[w", function() vim.diagnostic.jump {count=-1, float=true, severity={ min = vim.diagnostic.severity.WARN}} end)
+-- Move between errors only
+map_key("n", "]e", function() vim.diagnostic.jump {count=1, float=true, severity={ min = vim.diagnostic.severity.ERROR}} end)
+map_key("n", "[e", function() vim.diagnostic.jump {count=-1, float=true, severity={ min = vim.diagnostic.severity.ERROR}} end)
+
 map_key("n", "<leader>d", vim.diagnostic.open_float)
 map_key("n", "<leader>dq", vim.diagnostic.setqflist)
 map_key("n", "<leader>ds", function()
