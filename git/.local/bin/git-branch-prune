@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Auto-detect main branch
+MAIN_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+
+if [ -z "$MAIN_BRANCH" ]; then
+    echo "❌ Could not detect main branch. Is origin set up?"
+    exit 1
+fi
+
+echo "✅ Using '$MAIN_BRANCH' as the base branch."
+
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+# Get all local branches except the main and current ones
+branches=$(git for-each-ref --format='%(refname:short)' refs/heads/ | grep -vE "^(${MAIN_BRANCH})$")
+
+for branch in $branches; do
+    # Get the diff between the branch and main
+    base=$(git merge-base "$MAIN_BRANCH" "$branch")
+    # Make a syntetic commit with the tree of the branch and parent of the branch, simulating a squash merge, and check if there are any changes compared to main
+    if [[ $(git cherry "$MAIN_BRANCH" $(git commit-tree $(git rev-parse "$branch^{tree}") -p $base -m _)) == "-"* ]]; then
+        if [[ "$1" = "-f" || "$(read -rp "Delete $branch (squash merged into $MAIN_BRANCH)? [y/N] " confirm && echo "$confirm")" =~ ^[Yy]$ ]]; then
+            if [[ $branch == $current_branch ]]; then
+                echo "⚠️ You are on the branch '$branch'. Switching to '$MAIN_BRANCH' before deleting."
+                git switch $MAIN_BRANCH > /dev/null
+            fi
+            echo "🗑️ Deleting $branch"
+            git branch -D $branch > /dev/null
+        else
+            echo "❌ Skipped $branch"
+        fi
+    fi
+done
