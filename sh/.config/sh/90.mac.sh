@@ -4,6 +4,14 @@ if [ -f /opt/homebrew/bin/bin/brew ]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
+if [ -d /opt/homebrew/bin ]; then
+    export PATH="/opt/homebrew/bin:$PATH"
+fi
+
+if [ -d /opt/homebrew/sbin ]; then
+    export PATH="/opt/homebrew/sbin:$PATH"
+fi
+
 if [ -d /opt/homebrew/opt/findutils ]; then
     export PATH="/opt/homebrew/opt/findutils/libexec/gnubin:$PATH"
 fi
