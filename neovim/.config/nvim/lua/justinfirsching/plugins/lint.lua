@@ -3,10 +3,14 @@ return {
     config = function()
         local lint = require('lint')
         lint.linters_by_ft = {
-            go = { 'golangcilint', },
+            -- go = { 'golangcilint', },
+            javascript = { 'biomejs' },
+            javascriptreact = { 'biomejs' },
             json = { 'jsonlint', },
-            yaml = { 'yamllint', },
+            typescript = { 'biomejs' },
+            typescriptreact = { 'biomejs' },
             markdown = { 'markdownlint', },
+            yaml = { 'yamllint', },
         }
 
         lint.linters.markdownlint.args = {
