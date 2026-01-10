@@ -34,4 +34,5 @@ function __load_settings(){
 }
 __load_settings "$HOME/.config/sh"
 __load_settings "$HOME/.config/zsh"
-source tmux-loop
+
+[[ "$TERM_PROGRAM" == "vscode" ]] || source tmux-loop
