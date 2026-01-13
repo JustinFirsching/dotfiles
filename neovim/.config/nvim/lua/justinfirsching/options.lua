@@ -23,8 +23,3 @@ vim.opt.showmode = false
 vim.opt.hlsearch = false
 vim.opt.completeopt = 'menu,menuone,noselect,noinsert,preview'
 vim.opt.mouse = 'a'
-
--- LSP folding (gracefully degrades when no LSP supports it)
-vim.opt.foldmethod = 'expr'
-vim.opt.foldexpr = 'v:lua.vim.lsp.foldexpr()'
-vim.opt.foldlevel = 99
