@@ -1,0 +1,97 @@
+{
+    // Waybar Configuration
+    // Migrated from polybar config
+    // =========================================================================
+    
+    "layer": "top",
+    "position": "top",
+    "height": 15,
+    "spacing": 1,
+    
+    // Module layout (matching polybar: left=title, center=workspaces, right=status)
+    "modules-left": ["hyprland/window"],
+    "modules-center": ["hyprland/workspaces"],
+    "modules-right": ["pulseaudio", "battery", "backlight", "network", "clock", "custom/power"],
+    
+    // ===========================================================================
+    // LEFT MODULES
+    // ===========================================================================
+    
+    "hyprland/window": {
+        "format": "{}",
+        "max-length": 80,
+        "separate-outputs": true,
+        "rewrite": {
+            "": "Arch Linux"
+        }
+    },
+    
+    // ===========================================================================
+    // CENTER MODULES
+    // ===========================================================================
+    
+    "hyprland/workspaces": {
+        "format": "{name}",
+        "on-click": "activate",
+        "on-scroll-up": "hyprctl dispatch workspace e-1",
+        "on-scroll-down": "hyprctl dispatch workspace e+1",
+        "all-outputs": false,
+        "sort-by-number": true
+    },
+    
+    // ===========================================================================
+    // RIGHT MODULES
+    // ===========================================================================
+    
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": " Muted",
+        "format-icons": {
+            "default": ["", ""]
+        },
+        "on-click": "pavucontrol",
+        "scroll-step": 5
+    },
+    
+    "battery": {
+        "bat": "BAT1",
+        "adapter": "ACAD",
+        "interval": 60,
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": " {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-full": " {capacity}%"
+    },
+    
+    "backlight": {
+        "device": "acpi_video0",
+        "format": " {percent}%",
+        "on-scroll-up": "brightnessctl set +5%",
+        "on-scroll-down": "brightnessctl set 5%-"
+    },
+    
+    "network": {
+        "interval": 5,
+        "format-wifi": " {ipaddr}",
+        "format-ethernet": " {ipaddr}",
+        "format-disconnected": " Disconnected",
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}\n{essid} ({signalStrength}%)"
+    },
+    
+    "clock": {
+        "interval": 1,
+        "format": " {:%I:%M %p}",
+        "format-alt": " {:%m/%d/%Y}",
+        "tooltip-format": "<tt>{calendar}</tt>"
+    },
+    
+    "custom/power": {
+        "format": "",
+        "on-click": "wofi --show dmenu --prompt 'Power' --cache-file /dev/null <<< $'Shutdown\\nReboot\\nLogout' | xargs -I {} sh -c 'case {} in Shutdown) systemctl poweroff;; Reboot) systemctl reboot;; Logout) hyprctl dispatch exit;; esac'",
+        "tooltip": false
+    }
+}

@@ -1,0 +1,104 @@
+/* Wofi Stylesheet
+ * Matches the purple/black/gold theme from polybar
+ * 
+ * Color Palette:
+ * - Black:       #000000 (background)
+ * - Deep Purple: #69009c (selected)
+ * - White:       #ffffff (text)
+ * - Gold:        #ffd700 (accent)
+ */
+
+/* ===========================================================================
+ * WINDOW
+ * =========================================================================== */
+
+window {
+    background-color: #000000;
+    border: 2px solid #69009c;
+    border-radius: 0px;
+}
+
+/* ===========================================================================
+ * INPUT (search box)
+ * =========================================================================== */
+
+#input {
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    border-bottom: 2px solid #69009c;
+    border-radius: 0px;
+    padding: 8px 12px;
+    margin: 0px;
+    font-family: "Monospace";
+    font-size: 14px;
+}
+
+#input:focus {
+    border-bottom: 2px solid #ffd700;
+}
+
+/* ===========================================================================
+ * OUTER BOX (container)
+ * =========================================================================== */
+
+#outer-box {
+    margin: 0px;
+    padding: 0px;
+}
+
+#inner-box {
+    margin: 0px;
+    padding: 0px;
+}
+
+/* ===========================================================================
+ * SCROLL AREA
+ * =========================================================================== */
+
+#scroll {
+    margin: 0px;
+    padding: 0px;
+}
+
+/* ===========================================================================
+ * ENTRIES (list items)
+ * =========================================================================== */
+
+#entry {
+    padding: 8px 12px;
+    margin: 0px;
+    color: #ffffff;
+    font-family: "Monospace";
+    font-size: 12px;
+}
+
+#entry:selected {
+    background-color: #69009c;
+    color: #ffffff;
+}
+
+#entry:hover {
+    background-color: rgba(105, 0, 156, 0.5);
+}
+
+/* ===========================================================================
+ * TEXT
+ * =========================================================================== */
+
+#text {
+    margin: 0px 8px;
+    color: #ffffff;
+}
+
+#text:selected {
+    color: #ffffff;
+}
+
+/* ===========================================================================
+ * IMAGES (application icons)
+ * =========================================================================== */
+
+#img {
+    margin-right: 8px;
+}

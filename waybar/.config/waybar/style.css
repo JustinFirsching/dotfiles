@@ -1,0 +1,138 @@
+/* Waybar Stylesheet
+ * Migrated from polybar colors.ini
+ * 
+ * Color Palette:
+ * - Black:       #000000 (central-background)
+ * - Deep Purple: #69009c (module background)
+ * - White:       #ffffff (foreground)
+ * - Gold:        #ffd700 (active workspace)
+ * - Red:         #ff0000 (urgent)
+ */
+
+/* ===========================================================================
+ * GLOBAL STYLES
+ * =========================================================================== */
+
+* {
+    font-family: "Monospace", "Font Awesome 6 Free";
+    font-size: 11px;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+}
+
+window#waybar {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+/* ===========================================================================
+ * LEFT MODULES - Window Title
+ * =========================================================================== */
+
+#window {
+    background-color: #69009c;
+    color: #ffffff;
+    padding: 0 8px;
+}
+
+#window.empty {
+    background-color: #69009c;
+}
+
+/* ===========================================================================
+ * CENTER MODULES - Workspaces
+ * =========================================================================== */
+
+#workspaces {
+    background-color: transparent;
+}
+
+#workspaces button {
+    background-color: transparent;
+    color: #ffffff;
+    padding: 0 8px;
+    border: none;
+    border-radius: 0;
+}
+
+#workspaces button:hover {
+    background-color: rgba(105, 0, 156, 0.5);
+}
+
+#workspaces button.active {
+    color: #ffd700;
+}
+
+#workspaces button.urgent {
+    color: #ff0000;
+}
+
+#workspaces button.empty {
+    color: #808080;
+}
+
+/* ===========================================================================
+ * RIGHT MODULES - Status Items
+ * =========================================================================== */
+
+#pulseaudio,
+#battery,
+#backlight,
+#network,
+#clock,
+#custom-power {
+    background-color: #69009c;
+    color: #ffffff;
+    padding: 0 8px;
+}
+
+/* Battery states */
+#battery.warning {
+    color: #ffff00;
+}
+
+#battery.critical {
+    color: #ff0000;
+}
+
+#battery.charging {
+    color: #00ff00;
+}
+
+/* Pulseaudio muted */
+#pulseaudio.muted {
+    color: #808080;
+}
+
+/* Network disconnected */
+#network.disconnected {
+    color: #808080;
+}
+
+/* Power button */
+#custom-power {
+    padding: 0 10px;
+}
+
+#custom-power:hover {
+    background-color: #ff0000;
+}
+
+/* ===========================================================================
+ * TOOLTIP STYLING
+ * =========================================================================== */
+
+tooltip {
+    background-color: #000000;
+    border: 1px solid #69009c;
+    border-radius: 0;
+}
+
+tooltip label {
+    color: #ffffff;
+}

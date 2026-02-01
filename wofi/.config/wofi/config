@@ -1,0 +1,47 @@
+# Wofi Configuration
+# Application launcher (replaces i3-dmenu-desktop / dmenu)
+# ==============================================================================
+
+# Show mode (drun = .desktop files, run = executables, dmenu = stdin)
+mode=drun
+
+# Prompt text
+prompt=Run
+
+# Window dimensions
+width=400
+height=300
+
+# Always show search box
+allow_markup=true
+allow_images=true
+
+# Single click to launch
+insensitive=true
+
+# Hide search box icon
+hide_scroll=true
+
+# No shell completion (faster)
+no_actions=true
+
+# Cache for faster subsequent launches
+cache_file=/home/justin/.cache/wofi-drun
+
+# Matching mode (contains = fuzzy-ish)
+matching=contains
+
+# Image size for application icons
+image_size=24
+
+# Columns
+columns=1
+
+# Sort order
+sort_order=alphabetical
+
+# Layer (overlay = above windows)
+layer=overlay
+
+# Content (text only, no images for cleaner look - change if you want icons)
+# content=text

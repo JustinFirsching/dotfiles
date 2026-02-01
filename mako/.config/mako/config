@@ -1,0 +1,74 @@
+# Mako Notification Configuration
+# Notification daemon for Wayland
+# Matches the purple/black/gold theme
+# ==============================================================================
+
+# ==============================================================================
+# APPEARANCE
+# ==============================================================================
+
+# Font
+font=Monospace 11
+
+# Colors (matching polybar theme)
+background-color=#000000
+text-color=#ffffff
+border-color=#69009c
+
+# Border
+border-size=2
+border-radius=0
+
+# Dimensions
+width=300
+height=100
+margin=10
+padding=10
+
+# Position (top-right like most notification systems)
+anchor=top-right
+
+# ==============================================================================
+# BEHAVIOR
+# ==============================================================================
+
+# Default timeout (5 seconds)
+default-timeout=5000
+
+# Don't ignore timeout for low urgency
+ignore-timeout=0
+
+# Max visible notifications
+max-visible=5
+
+# Layer
+layer=overlay
+
+# ==============================================================================
+# URGENCY STYLES
+# ==============================================================================
+
+[urgency=low]
+border-color=#69009c
+default-timeout=3000
+
+[urgency=normal]
+border-color=#69009c
+default-timeout=5000
+
+[urgency=high]
+border-color=#ff0000
+background-color=#1d2021
+default-timeout=0
+
+# ==============================================================================
+# APP-SPECIFIC (examples)
+# ==============================================================================
+
+# Spotify notifications (gold border)
+# [app-name=Spotify]
+# border-color=#ffd700
+
+# Discord notifications (purple border)
+# [app-name=discord]
+# border-color=#5865F2
