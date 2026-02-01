@@ -15,6 +15,11 @@ esac
 if [ "$console" = false ] && [ -z "$TMUX" ] && [ ! -z "$(which tmux)" ]; then
     while true; do
         # Create/attach to main
+        # Check if we have a valid TTY before trying to attach
+        if ! tty >/dev/null 2>&1; then
+            # Not a terminal, break out of loop to avoid infinite loop
+            break
+        fi
         tmux new-session -A -s main >/dev/null
 
         # Check if we manually detatched (C-b + d)
