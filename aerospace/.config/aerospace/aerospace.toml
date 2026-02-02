@@ -20,17 +20,14 @@ default-root-container-orientation = 'auto'
 # Mouse follows focus when focused monitor changes (i3 default behavior)
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
-# Smart fullscreen: check window count on every focus change
-on-focus-changed = ['exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
-
-# Gaps configuration (matching i3-gaps: outer=10, inner=10)
+# Gaps configuration - inner gaps only (no outer gaps)
 [gaps]
     inner.horizontal = 10
     inner.vertical = 10
-    outer.left = 10
-    outer.bottom = 10
-    outer.top = 10
-    outer.right = 10
+    outer.left = 0
+    outer.bottom = 0
+    outer.top = 0
+    outer.right = 0
 
 # Key mapping
 [key-mapping]
@@ -48,8 +45,7 @@ on-focus-changed = ['exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
     '''
 
     # Kill focused window (alt+Shift+q in i3)
-    # After closing, check if remaining window should be fullscreened
-    alt-shift-q = ['close', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
+    alt-shift-q = 'close'
 
     # Application launcher (alt+d in i3 -> dmenu)
     # Opens Spotlight on macOS as equivalent
@@ -74,8 +70,7 @@ on-focus-changed = ['exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
     alt-v = 'join-with down'
 
     # Toggle fullscreen (alt+f in i3)
-    # --no-outer-gaps removes gaps when in fullscreen mode
-    alt-f = 'fullscreen --no-outer-gaps'
+    alt-f = 'fullscreen'
 
     # Change container layout
     # alt+s = stacking (v_accordion in AeroSpace)
@@ -101,17 +96,16 @@ on-focus-changed = ['exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
     alt-0 = 'workspace 10'
 
     # Move container to workspace (alt+Shift+1-0 in i3)
-    # After moving, check if remaining window should be fullscreened
-    alt-shift-1 = ['move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
-    alt-shift-2 = ['move-node-to-workspace 2', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
-    alt-shift-3 = ['move-node-to-workspace 3', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
-    alt-shift-4 = ['move-node-to-workspace 4', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
-    alt-shift-5 = ['move-node-to-workspace 5', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
-    alt-shift-6 = ['move-node-to-workspace 6', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
-    alt-shift-7 = ['move-node-to-workspace 7', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
-    alt-shift-8 = ['move-node-to-workspace 8', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
-    alt-shift-9 = ['move-node-to-workspace 9', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
-    alt-shift-0 = ['move-node-to-workspace 10', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
+    alt-shift-1 = 'move-node-to-workspace 1'
+    alt-shift-2 = 'move-node-to-workspace 2'
+    alt-shift-3 = 'move-node-to-workspace 3'
+    alt-shift-4 = 'move-node-to-workspace 4'
+    alt-shift-5 = 'move-node-to-workspace 5'
+    alt-shift-6 = 'move-node-to-workspace 6'
+    alt-shift-7 = 'move-node-to-workspace 7'
+    alt-shift-8 = 'move-node-to-workspace 8'
+    alt-shift-9 = 'move-node-to-workspace 9'
+    alt-shift-0 = 'move-node-to-workspace 10'
 
     # Move workspace to monitor (alt+Shift+< and alt+Shift+> in i3)
     alt-shift-comma = 'move-workspace-to-monitor --wrap-around prev'
