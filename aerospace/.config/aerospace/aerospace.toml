@@ -123,6 +123,9 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     # Service mode for additional operations (alt+Shift+; in default AeroSpace)
     alt-shift-semicolon = 'mode service'
 
+    # Screenshot to clipboard (interactive selection)
+    alt-shift-s = 'exec-and-forget screencapture -i -c'
+
 # Resize mode (matching i3 resize mode)
 [mode.resize.binding]
     # Resize with h/j/k/l
