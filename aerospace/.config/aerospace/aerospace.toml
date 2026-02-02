@@ -1,0 +1,169 @@
+# AeroSpace configuration
+# Ported from i3 config
+
+config-version = 2
+
+# Start AeroSpace at login
+start-at-login = true
+
+# Normalizations (similar to i3 behavior)
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# Accordion padding (similar to i3 stacked/tabbed visual indicator)
+accordion-padding = 30
+
+# Default layout settings
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+
+# Mouse follows focus when focused monitor changes (i3 default behavior)
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+# Smart fullscreen: check window count on every focus change
+on-focus-changed = ['exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
+
+# Gaps configuration (matching i3-gaps: outer=10, inner=10)
+[gaps]
+    inner.horizontal = 10
+    inner.vertical = 10
+    outer.left = 10
+    outer.bottom = 10
+    outer.top = 10
+    outer.right = 10
+
+# Key mapping
+[key-mapping]
+    preset = 'qwerty'
+
+# Main binding mode
+[mode.main.binding]
+    # Start a terminal (alt+Return in i3)
+    # Uses macOS Terminal.app - change to your preferred terminal
+    alt-enter = '''exec-and-forget osascript -e '
+    tell application "Terminal"
+        do script
+        activate
+    end tell'
+    '''
+
+    # Kill focused window (alt+Shift+q in i3)
+    # After closing, check if remaining window should be fullscreened
+    alt-shift-q = ['close', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
+
+    # Application launcher (alt+d in i3 -> dmenu)
+    # Opens Spotlight on macOS as equivalent
+    alt-d = 'exec-and-forget open -a "Spotlight"'
+
+    # Change focus (alt+h/j/k/l in i3)
+    alt-h = 'focus left'
+    alt-j = 'focus down'
+    alt-k = 'focus up'
+    alt-l = 'focus right'
+
+    # Move focused window (alt+Shift+h/j/k/l in i3)
+    alt-shift-h = 'move left'
+    alt-shift-j = 'move down'
+    alt-shift-k = 'move up'
+    alt-shift-l = 'move right'
+
+    # Split orientation using join-with (recommended over split with normalizations enabled)
+    # alt+b = join with window to the right (creates horizontal split)
+    # alt+v = join with window below (creates vertical split)
+    alt-b = 'join-with right'
+    alt-v = 'join-with down'
+
+    # Toggle fullscreen (alt+f in i3)
+    # --no-outer-gaps removes gaps when in fullscreen mode
+    alt-f = 'fullscreen --no-outer-gaps'
+
+    # Change container layout
+    # alt+s = stacking (v_accordion in AeroSpace)
+    # alt+w = tabbed (h_accordion in AeroSpace)
+    # alt+e = toggle split (tiles in AeroSpace)
+    alt-s = 'layout v_accordion'
+    alt-w = 'layout h_accordion'
+    alt-e = 'layout tiles horizontal vertical'
+
+    # Toggle tiling/floating (alt+Shift+space in i3)
+    alt-shift-space = 'layout floating tiling'
+
+    # Switch to workspace (alt+1-0 in i3)
+    alt-1 = 'workspace 1'
+    alt-2 = 'workspace 2'
+    alt-3 = 'workspace 3'
+    alt-4 = 'workspace 4'
+    alt-5 = 'workspace 5'
+    alt-6 = 'workspace 6'
+    alt-7 = 'workspace 7'
+    alt-8 = 'workspace 8'
+    alt-9 = 'workspace 9'
+    alt-0 = 'workspace 10'
+
+    # Move container to workspace (alt+Shift+1-0 in i3)
+    # After moving, check if remaining window should be fullscreened
+    alt-shift-1 = ['move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
+    alt-shift-2 = ['move-node-to-workspace 2', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
+    alt-shift-3 = ['move-node-to-workspace 3', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
+    alt-shift-4 = ['move-node-to-workspace 4', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
+    alt-shift-5 = ['move-node-to-workspace 5', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
+    alt-shift-6 = ['move-node-to-workspace 6', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
+    alt-shift-7 = ['move-node-to-workspace 7', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
+    alt-shift-8 = ['move-node-to-workspace 8', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
+    alt-shift-9 = ['move-node-to-workspace 9', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
+    alt-shift-0 = ['move-node-to-workspace 10', 'exec-and-forget ~/.config/aerospace/smart-fullscreen.sh']
+
+    # Move workspace to monitor (alt+Shift+< and alt+Shift+> in i3)
+    alt-shift-comma = 'move-workspace-to-monitor --wrap-around prev'
+    alt-shift-period = 'move-workspace-to-monitor --wrap-around next'
+
+    # Reload config (alt+Shift+c in i3)
+    alt-shift-c = 'reload-config'
+
+    # Enter resize mode (alt+r in i3)
+    alt-r = 'mode resize'
+
+    # Workspace back and forth (useful addition)
+    alt-tab = 'workspace-back-and-forth'
+
+    # Service mode for additional operations (alt+Shift+; in default AeroSpace)
+    alt-shift-semicolon = 'mode service'
+
+# Resize mode (matching i3 resize mode)
+[mode.resize.binding]
+    # Resize with h/j/k/l
+    h = 'resize width -50'
+    j = 'resize height +50'
+    k = 'resize height -50'
+    l = 'resize width +50'
+
+    # Resize with arrow keys
+    left = 'resize width -50'
+    down = 'resize height +50'
+    up = 'resize height -50'
+    right = 'resize width +50'
+
+    # Smart resize (uses parent container orientation)
+    minus = 'resize smart -50'
+    equal = 'resize smart +50'
+
+    # Exit resize mode
+    enter = 'mode main'
+    esc = 'mode main'
+    alt-r = 'mode main'
+
+# Service mode for additional operations
+[mode.service.binding]
+    esc = ['reload-config', 'mode main']
+    r = ['flatten-workspace-tree', 'mode main']  # Reset layout
+    f = ['layout floating tiling', 'mode main']  # Toggle floating
+    backspace = ['close-all-windows-but-current', 'mode main']
+
+    # Balance window sizes
+    b = ['balance-sizes', 'mode main']
+
+    # Join with adjacent windows (similar to i3 split behavior)
+    alt-shift-h = ['join-with left', 'mode main']
+    alt-shift-j = ['join-with down', 'mode main']
+    alt-shift-k = ['join-with up', 'mode main']
+    alt-shift-l = ['join-with right', 'mode main']
