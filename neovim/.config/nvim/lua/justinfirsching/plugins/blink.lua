@@ -15,9 +15,9 @@ return {
                 ['<Tab>'] = { 'accept', function(cmp) cmp.accept({ index = 1 }) end, 'fallback' },
             },
             appearance = {
-                -- nerd_font_variant = '',
+                nerd_font_variant = 'mono',
                 kind_icons = {
-                    Copilot = "", -- Copilot robot icon next to copilot suggestions
+                    Copilot = "", -- Copilot icon from nerd fonts
                 },
             },
             -- (Default) Only show the documentation popup when manually triggered

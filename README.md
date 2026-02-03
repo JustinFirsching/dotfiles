@@ -122,7 +122,8 @@ sudo pacman -S hyprland waybar foot wofi mako hyprlock hypridle \
 ### Fonts
 
 ```bash
-sudo pacman -S noto-fonts-emoji ttf-liberation-mono ttf-dejavu
+sudo pacman -S noto-fonts-emoji ttf-liberation-mono ttf-dejavu \
+               ttf-nerd-fonts-symbols-mono
 ```
 
 ### System utilities
