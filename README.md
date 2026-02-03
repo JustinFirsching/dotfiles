@@ -42,19 +42,19 @@ I use [GNU Stow](https://www.gnu.org/software/stow/) to manage symlinks for conf
 
 ```bash
 # Install Hyprland configs
-stow hyprland
+stow -t ~ hyprland
 
 # Install waybar
-stow waybar
+stow -t ~ waybar
 
 # Install multiple at once
-stow zsh tmux neovim foot
+stow -t ~ zsh tmux neovim foot
 ```
 
 ### Unstow (remove symlinks)
 
 ```bash
-stow -D hyprland
+stow -t ~ -D hyprland
 ```
 
 ## Notes
@@ -154,7 +154,7 @@ brew install pinentry-mac
 
 After installing, stow the gnupg config:
 ```bash
-stow gnupg
+stow -t ~ gnupg
 ```
 
 The gpg-agent caches passphrases for 1 hour by default (2 hours max).
