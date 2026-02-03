@@ -31,7 +31,8 @@ This repo has evolved over time as I've switched between different setups. Here'
 - **neovim** - Text editor config
 
 ### Other stuff
-- **git** - Git configuration
+- **git** - Git configuration with GPG commit signing
+- **gnupg** - GPG agent config with graphical pinentry
 - **fonts** - Custom fonts
 - **opencode** - OpenCode AI assistant config
 
@@ -138,6 +139,25 @@ sudo pacman -S brightnessctl wireplumber pipewire pipewire-pulse \
 ```bash
 sudo pacman -S tmux zsh neovim fzf
 ```
+
+### GPG and Git signing
+
+Git commits are automatically signed with GPG. The pinentry config uses terminal-based prompts on Linux and native GUI on macOS.
+
+```bash
+# Linux - terminal-based passphrase entry
+sudo pacman -S pinentry
+
+# macOS - graphical passphrase entry
+brew install pinentry-mac
+```
+
+After installing, stow the gnupg config:
+```bash
+stow gnupg
+```
+
+The gpg-agent caches passphrases for 1 hour by default (2 hours max).
 
 ### Optional
 
