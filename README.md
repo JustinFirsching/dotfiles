@@ -115,8 +115,8 @@ When you close the tmux session (kill the shell), it closes the terminal too. Bu
 ### Core Hyprland setup
 
 ```bash
-sudo pacman -S hyprland waybar foot wofi mako hyprlock hypridle \
-               swww polkit-gnome
+sudo pacman -S hyprland waybar foot bemenu bemenu-wayland \
+               j4-dmenu-desktop mako hyprlock hypridle swww polkit-gnome
 ```
 
 ### Fonts
