@@ -164,3 +164,12 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     alt-shift-j = ['join-with down', 'mode main']
     alt-shift-k = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
+
+# Workspace assignments for specific applications
+[[on-window-detected]]
+if.app-id = 'com.spotify.client'
+run = 'move-node-to-workspace 9'
+
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord'
+run = 'move-node-to-workspace 10'
