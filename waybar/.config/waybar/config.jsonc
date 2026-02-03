@@ -6,7 +6,7 @@
     "layer": "top",
     "position": "top",
     "height": 15,
-    "spacing": 1,
+    "spacing": 0,
     
     // Module layout (matching polybar: left=title, center=workspaces, right=status)
     "modules-left": ["hyprland/window"],
@@ -44,11 +44,8 @@
     // ===========================================================================
     
     "pulseaudio": {
-        "format": "{icon} {volume}%",
-        "format-muted": " Muted",
-        "format-icons": {
-            "default": ["", ""]
-        },
+        "format": "🔊 {volume}%",
+        "format-muted": "🔇",
         "on-click": "pavucontrol",
         "scroll-step": 5
     },
@@ -61,36 +58,37 @@
             "warning": 30,
             "critical": 15
         },
-        "format": " {capacity}%",
-        "format-charging": " {capacity}%",
-        "format-plugged": " {capacity}%",
-        "format-full": " {capacity}%"
+        "format": "🔋 {capacity}%",
+        "format-charging": "⚡ {capacity}%",
+        "format-plugged": "🔌 {capacity}%",
+        "format-full": "✅ {capacity}%"
     },
     
     "backlight": {
         "device": "acpi_video0",
-        "format": " {percent}%",
+        "format": "☀️ {percent}%",
+        "tooltip-format": "Brightness: {percent}%",
         "on-scroll-up": "brightnessctl set +5%",
         "on-scroll-down": "brightnessctl set 5%-"
     },
     
     "network": {
         "interval": 5,
-        "format-wifi": " {ipaddr}",
-        "format-ethernet": " {ipaddr}",
-        "format-disconnected": " Disconnected",
+        "format-wifi": "📶 {ipaddr}",
+        "format-ethernet": "🌐 {ipaddr}",
+        "format-disconnected": "❌ Disconnected",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}\n{essid} ({signalStrength}%)"
     },
     
     "clock": {
         "interval": 1,
-        "format": " {:%I:%M %p}",
-        "format-alt": " {:%m/%d/%Y}",
+        "format": "🕐 {:%I:%M %p}",
+        "format-alt": "📅 {:%m/%d/%Y}",
         "tooltip-format": "<tt>{calendar}</tt>"
     },
     
     "custom/power": {
-        "format": "",
+        "format": "⏻",
         "on-click": "wofi --show dmenu --prompt 'Power' --cache-file /dev/null <<< $'Shutdown\\nReboot\\nLogout' | xargs -I {} sh -c 'case {} in Shutdown) systemctl poweroff;; Reboot) systemctl reboot;; Logout) hyprctl dispatch exit;; esac'",
         "tooltip": false
     }

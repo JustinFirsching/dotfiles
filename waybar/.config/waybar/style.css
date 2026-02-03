@@ -1,6 +1,6 @@
 /* Waybar Stylesheet
  * Migrated from polybar colors.ini
- * 
+ *
  * Color Palette:
  * - Black:       #000000 (central-background)
  * - Deep Purple: #69009c (module background)
@@ -14,7 +14,7 @@
  * =========================================================================== */
 
 * {
-    font-family: "Monospace", "Font Awesome 6 Free";
+    font-family: "Liberation Mono", "DejaVu Sans Mono", monospace, "Noto Color Emoji";
     font-size: 11px;
     min-height: 0;
     border: none;
@@ -88,7 +88,9 @@ window#waybar.hidden {
 #custom-power {
     background-color: #69009c;
     color: #ffffff;
-    padding: 0 8px;
+    padding: 0 6px;
+    margin: 0;
+    border-right: 1px solid #ffffff;
 }
 
 /* Battery states */
