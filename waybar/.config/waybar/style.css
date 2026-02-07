@@ -80,6 +80,10 @@ window#waybar.hidden {
  * RIGHT MODULES - Status Items
  * =========================================================================== */
 
+#mpris,
+#custom-player-prev,
+#custom-player-play-pause,
+#custom-player-next,
 #pulseaudio,
 #battery,
 #backlight,
@@ -109,6 +113,17 @@ window#waybar.hidden {
 /* Pulseaudio muted */
 #pulseaudio.muted {
     color: #808080;
+}
+
+/* MPRIS paused */
+#mpris.paused {
+    color: #808080;
+}
+
+/* Player control buttons - no border between them */
+#custom-player-prev,
+#custom-player-play-pause {
+    border-right: none;
 }
 
 /* Network disconnected */

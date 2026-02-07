@@ -2,21 +2,21 @@
     // Waybar Configuration
     // Migrated from polybar config
     // =========================================================================
-    
+
     "layer": "top",
     "position": "top",
     "height": 15,
     "spacing": 0,
-    
+
     // Module layout (matching polybar: left=title, center=workspaces, right=status)
     "modules-left": ["hyprland/window"],
     "modules-center": ["hyprland/workspaces"],
-    "modules-right": ["pulseaudio", "battery", "backlight", "network", "clock", "custom/power"],
-    
+    "modules-right": ["mpris", "custom/player-prev", "custom/player-play-pause", "custom/player-next", "pulseaudio", "battery", "backlight", "network", "clock", "custom/power"],
+
     // ===========================================================================
     // LEFT MODULES
     // ===========================================================================
-    
+
     "hyprland/window": {
         "format": "{}",
         "max-length": 80,
@@ -25,11 +25,11 @@
             "": "Arch Linux"
         }
     },
-    
+
     // ===========================================================================
     // CENTER MODULES
     // ===========================================================================
-    
+
     "hyprland/workspaces": {
         "format": "{name}",
         "on-click": "activate",
@@ -38,18 +38,44 @@
         "all-outputs": false,
         "sort-by-number": true
     },
-    
+
     // ===========================================================================
     // RIGHT MODULES
     // ===========================================================================
-    
+
+    "mpris": {
+        "format": "🎵 {artist} - {title}",
+        "format-paused": "⏸ {artist} - {title}",
+        "format-stopped": "",
+        "max-length": 40,
+        "tooltip-format": "{player}: {artist} - {title}\n{album}"
+    },
+
+    "custom/player-prev": {
+        "format": "⏮",
+        "on-click": "playerctl previous",
+        "tooltip": false
+    },
+
+    "custom/player-play-pause": {
+        "format": "⏯",
+        "on-click": "playerctl play-pause",
+        "tooltip": false
+    },
+
+    "custom/player-next": {
+        "format": "⏭",
+        "on-click": "playerctl next",
+        "tooltip": false
+    },
+
     "pulseaudio": {
         "format": "🔊 {volume}%",
-        "format-muted": "🔇",
+        "format-muted": "🔇 Muted",
         "on-click": "pavucontrol",
-        "scroll-step": 5
+        "scroll-step": 1
     },
-    
+
     "battery": {
         "bat": "BAT1",
         "adapter": "ACAD",
@@ -63,7 +89,7 @@
         "format-plugged": "🔌 {capacity}%",
         "format-full": "✅ {capacity}%"
     },
-    
+
     "backlight": {
         "device": "acpi_video0",
         "format": "☀️ {percent}%",
@@ -71,7 +97,7 @@
         "on-scroll-up": "brightnessctl set +5%",
         "on-scroll-down": "brightnessctl set 5%-"
     },
-    
+
     "network": {
         "interval": 5,
         "format-wifi": "📶 {ipaddr}",
@@ -79,14 +105,14 @@
         "format-disconnected": "❌ Disconnected",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}\n{essid} ({signalStrength}%)"
     },
-    
+
     "clock": {
         "interval": 1,
         "format": "🕐 {:%I:%M %p}",
         "format-alt": "📅 {:%m/%d/%Y}",
         "tooltip-format": "<tt>{calendar}</tt>"
     },
-    
+
     "custom/power": {
         "format": "⏻",
         "on-click": "wofi --show dmenu --prompt 'Power' --cache-file /dev/null <<< $'Shutdown\\nReboot\\nLogout' | xargs -I {} sh -c 'case {} in Shutdown) systemctl poweroff;; Reboot) systemctl reboot;; Logout) hyprctl dispatch exit;; esac'",
