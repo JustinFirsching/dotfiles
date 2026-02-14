@@ -24,10 +24,10 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 [gaps]
     inner.horizontal = 10
     inner.vertical = 10
-    outer.left = 0
-    outer.bottom = 0
-    outer.top = 0
-    outer.right = 0
+    outer.left = 5
+    outer.bottom = 5
+    outer.top = 5
+    outer.right = 5
 
 # Key mapping
 [key-mapping]
@@ -173,3 +173,7 @@ run = 'move-node-to-workspace 9'
 [[on-window-detected]]
 if.app-id = 'com.hnc.Discord'
 run = 'move-node-to-workspace 10'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.MobileSMS'
+run = 'layout floating'
