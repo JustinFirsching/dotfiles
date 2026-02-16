@@ -1,14 +1,13 @@
 {
-    // Waybar Configuration
-    // Migrated from polybar config
+    // Waybar Configuration - Gruvbox Dark Hard
     // =========================================================================
 
     "layer": "top",
     "position": "top",
-    "height": 15,
+    "height": 30,
     "spacing": 0,
 
-    // Module layout (matching polybar: left=title, center=workspaces, right=status)
+    // Module layout (left=title, center=workspaces, right=status)
     "modules-left": ["hyprland/window"],
     "modules-center": ["hyprland/workspaces"],
     "modules-right": ["mpris", "custom/player-prev", "custom/player-play-pause", "custom/player-next", "pulseaudio", "battery", "backlight", "network", "clock", "custom/power"],
@@ -22,7 +21,7 @@
         "max-length": 80,
         "separate-outputs": true,
         "rewrite": {
-            "": "Arch Linux"
+            "": " Arch Linux"
         }
     },
 
@@ -44,34 +43,49 @@
     // ===========================================================================
 
     "mpris": {
-        "format": "🎵 {artist} - {title}",
-        "format-paused": "⏸ {artist} - {title}",
+        "format": "{player_icon} {artist} - {title}",
+        "format-paused": "{status_icon} {artist} - {title}",
         "format-stopped": "",
+        "player-icons": {
+            "default": "",
+            "firefox": "󰈹",
+            "spotify": "",
+            "chromium": ""
+        },
+        "status-icons": {
+            "paused": ""
+        },
         "max-length": 40,
         "tooltip-format": "{player}: {artist} - {title}\n{album}"
     },
 
     "custom/player-prev": {
-        "format": "⏮",
+        "format": "{}",
+        "exec": "playerctl status >/dev/null 2>&1 && echo '󰒮' || echo ''",
+        "interval": 2,
         "on-click": "playerctl previous",
         "tooltip": false
     },
 
     "custom/player-play-pause": {
-        "format": "⏯",
+        "format": "{}",
+        "exec": "status=$(playerctl status 2>/dev/null); if [ \"$status\" = 'Playing' ]; then echo '󰏤'; elif [ \"$status\" = 'Paused' ]; then echo '󰐊'; else echo ''; fi",
+        "interval": 1,
         "on-click": "playerctl play-pause",
         "tooltip": false
     },
 
     "custom/player-next": {
-        "format": "⏭",
+        "format": "{}",
+        "exec": "playerctl status >/dev/null 2>&1 && echo '󰒭' || echo ''",
+        "interval": 2,
         "on-click": "playerctl next",
         "tooltip": false
     },
 
     "pulseaudio": {
-        "format": "🔊 {volume}%",
-        "format-muted": "🔇 Muted",
+        "format": "󰕾 {volume}%",
+        "format-muted": "󰖁 Muted",
         "on-click": "pavucontrol",
         "scroll-step": 1
     },
@@ -84,15 +98,15 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "🔋 {capacity}%",
-        "format-charging": "⚡ {capacity}%",
-        "format-plugged": "🔌 {capacity}%",
-        "format-full": "✅ {capacity}%"
+        "format": "󰁹 {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": "󰚥 {capacity}%",
+        "format-full": "󰁹 {capacity}%"
     },
 
     "backlight": {
         "device": "acpi_video0",
-        "format": "☀️ {percent}%",
+        "format": "󰃠 {percent}%",
         "tooltip-format": "Brightness: {percent}%",
         "on-scroll-up": "brightnessctl set +5%",
         "on-scroll-down": "brightnessctl set 5%-"
@@ -100,22 +114,22 @@
 
     "network": {
         "interval": 5,
-        "format-wifi": "📶 {ipaddr}",
-        "format-ethernet": "🌐 {ipaddr}",
-        "format-disconnected": "❌ Disconnected",
+        "format-wifi": "󰤨 {ipaddr}",
+        "format-ethernet": "󰈀 {ipaddr}",
+        "format-disconnected": "󰤭 Disconnected",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}\n{essid} ({signalStrength}%)"
     },
 
     "clock": {
         "interval": 1,
-        "format": "🕐 {:%I:%M %p}",
-        "format-alt": "📅 {:%m/%d/%Y}",
+        "format": "󰥔 {:%I:%M %p}",
+        "format-alt": "󰃭 {:%m/%d/%Y}",
         "tooltip-format": "<tt>{calendar}</tt>"
     },
 
     "custom/power": {
-        "format": "⏻",
-        "on-click": "wofi --show dmenu --prompt 'Power' --cache-file /dev/null <<< $'Shutdown\\nReboot\\nLogout' | xargs -I {} sh -c 'case {} in Shutdown) systemctl poweroff;; Reboot) systemctl reboot;; Logout) hyprctl dispatch exit;; esac'",
+        "format": "󰐥",
+        "on-click": "wlogout",
         "tooltip": false
     }
 }

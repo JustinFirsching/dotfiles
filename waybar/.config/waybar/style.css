@@ -1,12 +1,23 @@
-/* Waybar Stylesheet
- * Migrated from polybar colors.ini
+/* Waybar Stylesheet - Gruvbox Dark Hard
  *
- * Color Palette:
- * - Black:       #000000 (central-background)
- * - Deep Purple: #69009c (module background)
- * - White:       #ffffff (foreground)
- * - Gold:        #ffd700 (active workspace)
- * - Red:         #ff0000 (urgent)
+ * Gruvbox Dark Hard Palette:
+ *   bg0_hard (bg):    #1d2021
+ *   bg0:              #282828
+ *   bg1:              #3c3836
+ *   bg2:              #504945
+ *   bg3:              #665c54
+ *   fg0:              #fbf1c7
+ *   fg1 (fg):         #ebdbb2
+ *   fg2:              #d5c4a1
+ *   fg3:              #bdae93
+ *   fg4:              #a89984 (gray)
+ *   red:              #fb4934
+ *   green:            #b8bb26
+ *   yellow:           #fabd2f
+ *   blue:             #83a598
+ *   purple:           #d3869b
+ *   aqua:             #8ec07c
+ *   orange:           #fe8019
  */
 
 /* ===========================================================================
@@ -14,16 +25,16 @@
  * =========================================================================== */
 
 * {
-    font-family: "Liberation Mono", "DejaVu Sans Mono", monospace, "Noto Color Emoji";
-    font-size: 11px;
+    font-family: "JetBrainsMono Nerd Font", "FiraCode Nerd Font", "Symbols Nerd Font", monospace;
+    font-size: 13px;
     min-height: 0;
     border: none;
     border-radius: 0;
 }
 
 window#waybar {
-    background-color: #000000;
-    color: #ffffff;
+    background-color: rgba(29, 32, 33, 0.9);
+    color: #ebdbb2;
 }
 
 window#waybar.hidden {
@@ -31,55 +42,11 @@ window#waybar.hidden {
 }
 
 /* ===========================================================================
- * LEFT MODULES - Window Title
+ * SHARED MODULE PILL STYLE
  * =========================================================================== */
 
-#window {
-    background-color: #69009c;
-    color: #ffffff;
-    padding: 0 8px;
-}
-
-#window.empty {
-    background-color: #69009c;
-}
-
-/* ===========================================================================
- * CENTER MODULES - Workspaces
- * =========================================================================== */
-
-#workspaces {
-    background-color: transparent;
-}
-
-#workspaces button {
-    background-color: transparent;
-    color: #ffffff;
-    padding: 0 8px;
-    border: none;
-    border-radius: 0;
-}
-
-#workspaces button:hover {
-    background-color: rgba(105, 0, 156, 0.5);
-}
-
-#workspaces button.active {
-    color: #ffd700;
-}
-
-#workspaces button.urgent {
-    color: #ff0000;
-}
-
-#workspaces button.empty {
-    color: #808080;
-}
-
-/* ===========================================================================
- * RIGHT MODULES - Status Items
- * =========================================================================== */
-
+#window,
+#workspaces,
 #mpris,
 #custom-player-prev,
 #custom-player-play-pause,
@@ -90,54 +57,154 @@ window#waybar.hidden {
 #network,
 #clock,
 #custom-power {
-    background-color: #69009c;
-    color: #ffffff;
-    padding: 0 6px;
-    margin: 0;
-    border-right: 1px solid #ffffff;
+    background-color: #3c3836;
+    color: #ebdbb2;
+    padding: 2px 10px;
+    margin: 3px 2px;
+    border-radius: 10px;
 }
 
-/* Battery states */
+/* ===========================================================================
+ * LEFT MODULES - Window Title
+ * =========================================================================== */
+
+#window {
+    background-color: #3c3836;
+    color: #fabd2f;
+    font-weight: bold;
+}
+
+#window.empty {
+    background-color: transparent;
+}
+
+/* ===========================================================================
+ * CENTER MODULES - Workspaces
+ * =========================================================================== */
+
+#workspaces {
+    background-color: #3c3836;
+    border-radius: 10px;
+    padding: 0 2px;
+}
+
+#workspaces button {
+    background-color: transparent;
+    color: #a89984;
+    padding: 2px 8px;
+    margin: 2px 1px;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+#workspaces button:hover {
+    background-color: rgba(250, 189, 47, 0.3);
+    color: #fbf1c7;
+}
+
+#workspaces button.active {
+    background-color: #fabd2f;
+    color: #1d2021;
+    font-weight: bold;
+}
+
+#workspaces button.urgent {
+    background-color: #fb4934;
+    color: #1d2021;
+}
+
+#workspaces button.empty {
+    color: #504945;
+}
+
+/* ===========================================================================
+ * RIGHT MODULES - Per-module accent colors
+ * =========================================================================== */
+
+#mpris {
+    color: #d3869b;
+}
+
+#custom-player-prev,
+#custom-player-play-pause,
+#custom-player-next {
+    color: #d3869b;
+    padding: 2px 6px;
+    margin-left: 0;
+    margin-right: 0;
+    min-width: 16px;
+}
+
+/* Group player controls visually */
+#custom-player-prev {
+    border-radius: 10px 0 0 10px;
+    margin-right: 0;
+}
+
+#custom-player-play-pause {
+    border-radius: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#custom-player-next {
+    border-radius: 0 10px 10px 0;
+    margin-left: 0;
+}
+
+#pulseaudio {
+    color: #83a598;
+}
+
+#pulseaudio.muted {
+    color: #665c54;
+}
+
+#battery {
+    color: #b8bb26;
+}
+
 #battery.warning {
-    color: #ffff00;
+    color: #fe8019;
 }
 
 #battery.critical {
-    color: #ff0000;
+    background-color: #fb4934;
+    color: #1d2021;
+    animation: blink 1s infinite;
 }
 
 #battery.charging {
-    color: #00ff00;
+    color: #b8bb26;
 }
 
-/* Pulseaudio muted */
-#pulseaudio.muted {
-    color: #808080;
+#backlight {
+    color: #fabd2f;
 }
 
-/* MPRIS paused */
-#mpris.paused {
-    color: #808080;
+#network {
+    color: #8ec07c;
 }
 
-/* Player control buttons - no border between them */
-#custom-player-prev,
-#custom-player-play-pause {
-    border-right: none;
-}
-
-/* Network disconnected */
 #network.disconnected {
-    color: #808080;
+    color: #665c54;
+}
+
+#clock {
+    color: #fe8019;
+    font-weight: bold;
 }
 
 /* Power button */
 #custom-power {
-    padding: 0 10px;
+    color: #fb4934;
+    padding: 2px 10px;
 }
 
 #custom-power:hover {
-    background-color: #ff0000;
+    background-color: #fb4934;
+    color: #1d2021;
 }
 
 /* ===========================================================================
@@ -145,11 +212,22 @@ window#waybar.hidden {
  * =========================================================================== */
 
 tooltip {
-    background-color: #000000;
-    border: 1px solid #69009c;
-    border-radius: 0;
+    background-color: #1d2021;
+    border: 1px solid #fabd2f;
+    border-radius: 8px;
 }
 
 tooltip label {
-    color: #ffffff;
+    color: #ebdbb2;
+}
+
+/* ===========================================================================
+ * ANIMATIONS
+ * =========================================================================== */
+
+@keyframes blink {
+    to {
+        background-color: #3c3836;
+        color: #fb4934;
+    }
 }

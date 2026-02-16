@@ -8,7 +8,7 @@ This repo has evolved over time as I've switched between different setups. Here'
 
 ### Wayland / Hyprland
 - **hyprland** - Tiling compositor config, migrated from i3-gaps
-- **waybar** - Status bar with emoji icons
+- **waybar** - Status bar with Gruvbox Dark Hard theme and Nerd Font icons
 - **foot** - Minimal terminal emulator
 - **wofi** - Application launcher
 - **mako** - Notification daemon
@@ -78,7 +78,7 @@ Uses wildcard matching (`*touchpad*`, `*mouse*`) so it works across different ha
 
 ### Font setup
 
-I use Liberation Mono as my primary terminal font, with Noto Color Emoji as fallback for emoji rendering. Waybar uses the same font stack so everything looks consistent.
+I use Symbols Nerd Font Mono for icons across waybar and other UI elements, with Liberation Mono and Noto Color Emoji as fallbacks.
 
 ### Project workflow with tmux
 
@@ -117,7 +117,8 @@ When you close the tmux session (kill the shell), it closes the terminal too. Bu
 
 ```bash
 sudo pacman -S hyprland waybar foot bemenu bemenu-wayland \
-               j4-dmenu-desktop mako hyprlock hypridle swww polkit-gnome
+               j4-dmenu-desktop mako hyprlock hypridle swww polkit-gnome \
+               wlogout
 ```
 
 ### Fonts
