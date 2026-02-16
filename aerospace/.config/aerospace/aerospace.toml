@@ -36,13 +36,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 # Main binding mode
 [mode.main.binding]
     # Start a terminal (alt+Return in i3)
-    # Uses macOS Terminal.app - change to your preferred terminal
-    alt-enter = '''exec-and-forget osascript -e '
-    tell application "Terminal"
-        do script
-        activate
-    end tell'
-    '''
+    alt-enter = 'exec-and-forget open -na Ghostty'
 
     # Kill focused window (alt+Shift+q in i3)
     alt-shift-q = 'close'
