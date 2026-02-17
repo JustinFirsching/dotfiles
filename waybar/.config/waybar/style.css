@@ -179,6 +179,12 @@ window#waybar.hidden {
     color: #b8bb26;
 }
 
+#battery.critical.charging {
+    background-color: #3c3836;
+    color: #b8bb26;
+    animation: none;
+}
+
 #backlight {
     color: #fabd2f;
 }
