@@ -15,12 +15,22 @@ return {
             -- Setup dap-ui
             dapui.setup()
 
+            -- Auto-scroll REPL to bottom on new output
+            dap.defaults.fallback.focus_terminal = true
+
             -- Setup virtual text
             require("nvim-dap-virtual-text").setup()
 
             -- Setup Python debugging with debugpy from Mason
             local debugpy_path = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
             require("dap-python").setup(debugpy_path)
+
+            -- Setup .NET debugging with netcoredbg
+            dap.adapters.coreclr = {
+                type = "executable",
+                command = vim.fn.stdpath("data") .. "/mason/packages/netcoredbg/netcoredbg",
+                args = { "--interpreter=vscode" },
+            }
 
             -- Automatically open/close dapui when debugging starts/ends
             dap.listeners.before.attach.dapui_config = function()
