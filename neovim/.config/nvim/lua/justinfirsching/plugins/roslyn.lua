@@ -4,5 +4,16 @@ return {
         "mason-org/mason-lspconfig.nvim",
     },
     ft = "cs",
-    opts = true
+    init = function()
+        vim.lsp.config("roslyn", {
+            handlers = {
+                ["razor/provideDynamicFileInfo"] = function()
+                    return vim.NIL
+                end,
+            },
+        })
+    end,
+    opts = {
+        lock_target = true,
+    },
 }
