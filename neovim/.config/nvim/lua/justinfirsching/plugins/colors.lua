@@ -19,6 +19,7 @@ return {
         local highlight_groups = {
             Normal = { bg = 'none' },
             NormalFloat = { bg = 'none' },
+            FloatBorder = { fg = '#83a598', bg = 'none' },
         }
 
         for group, styles in pairs(highlight_groups) do

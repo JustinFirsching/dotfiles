@@ -1,4 +1,5 @@
 local map_key = require("justinfirsching.utils").map_key
+local lsp_ui = require("justinfirsching.lsp_ui")
 
 local split_and_move = function(split_cmd, callback)
     vim.cmd(split_cmd)
@@ -45,7 +46,7 @@ map_key("n", "[w", function() vim.diagnostic.jump {count=-1, float=true, severit
 map_key("n", "]e", function() vim.diagnostic.jump {count=1, float=true, severity={ min = vim.diagnostic.severity.ERROR}} end)
 map_key("n", "[e", function() vim.diagnostic.jump {count=-1, float=true, severity={ min = vim.diagnostic.severity.ERROR}} end)
 
-map_key("n", "<leader>d", vim.diagnostic.open_float)
+map_key("n", "<leader>d", function() vim.diagnostic.open_float(nil, lsp_ui.diagnostic_float) end)
 map_key("n", "<leader>dq", vim.diagnostic.setqflist)
 map_key("n", "<leader>ds", function()
   local new_config = not vim.diagnostic.config().virtual_lines
@@ -61,8 +62,6 @@ map_key("n", "<leader>gdv", function() split_and_move("vsplit", vim.lsp.buf.defi
 map_key("n", "<leader>gtd", vim.lsp.buf.type_definition)
 map_key("n", "K", vim.lsp.buf.hover)
 map_key("n", "<leader>rn", vim.lsp.buf.rename)
-map_key("n", "<leader>sd", vim.diagnostic.open_float)
-map_key("n", "<leader>sh", vim.lsp.buf.signature_help)
 map_key({ "n", "i" }, "<C-k>", vim.lsp.buf.signature_help)
 
 -- Open URLs in the browser

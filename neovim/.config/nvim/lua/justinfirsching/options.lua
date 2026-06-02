@@ -1,3 +1,5 @@
+local lsp_ui = require("justinfirsching.lsp_ui")
+
 vim.opt.autoindent = true
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.colorcolumn = '80'
@@ -23,3 +25,17 @@ vim.opt.showmode = false
 vim.opt.hlsearch = false
 vim.opt.completeopt = 'menu,menuone,noselect,noinsert,preview'
 vim.opt.mouse = 'a'
+
+vim.diagnostic.config({
+    float = lsp_ui.diagnostic_float,
+})
+
+vim.lsp.handlers["textDocument/hover"] = lsp_ui.with_handler_opts(
+    vim.lsp.handlers.hover,
+    lsp_ui.hover
+)
+
+vim.lsp.handlers["textDocument/signatureHelp"] = lsp_ui.with_handler_opts(
+    vim.lsp.handlers.signature_help,
+    lsp_ui.signature_help
+)
