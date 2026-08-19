@@ -10,7 +10,7 @@ return {
         fzf_lua.setup({
             files = {
                 actions = {
-                    ["ctrl-e"] = {
+                    ["ctrl-i"] = {
                         fn = function(_, opts)
                             local filepath = opts.last_query
 
