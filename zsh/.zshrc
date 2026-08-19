@@ -3,8 +3,9 @@
 zstyle ':completion:*' completer _complete _ignored _approximate
 zstyle :compinstall filename "$HOME/.zshrc"
 
-autoload -Uz compinit
+autoload -Uz compinit bashcompinit
 compinit
+bashcompinit
 # End of lines added by compinstall
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
