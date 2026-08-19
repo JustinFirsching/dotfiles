@@ -8,5 +8,6 @@ fi
 # Go directory in $HOME for tools
 if [ -d "$GOROOT" ]; then
     export GOROOT
-    export PATH=$HOME/go/bin:$GOROOT/bin:$PATH
+    path_prepend "$GOROOT/bin"
+    path_prepend "$HOME/go/bin"
 fi

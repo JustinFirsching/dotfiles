@@ -16,10 +16,7 @@ if [ -n "${__nvm_source_dir:-}" ] && [ -f "$__nvm_source_dir/nvm.sh" ]; then
     __nvm_default_version="$(nvm_version default)"
     __nvm_default_bin="$NVM_DIR/versions/node/$__nvm_default_version/bin"
     if [ -x "$__nvm_default_bin/node" ]; then
-        case ":$PATH:" in
-            *":$__nvm_default_bin:"*) ;;
-            *) export PATH="$__nvm_default_bin:$PATH" ;;
-        esac
+        path_prepend "$__nvm_default_bin"
     fi
     unset __nvm_default_version __nvm_default_bin
 

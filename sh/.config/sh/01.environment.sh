@@ -7,7 +7,6 @@ export PS1="%n@%M:%c$ "
 
 export GPG_TTY=$TTY
 
-PATH=$HOME/.local/bin:$PATH
-export PATH
+path_prepend "$HOME/.local/bin"
 
 export JAVA_HOME=${JAVA_HOME:-/usr/lib/jvm/default-runtime}

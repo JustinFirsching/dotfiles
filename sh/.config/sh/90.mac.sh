@@ -5,21 +5,21 @@ if [ -f /opt/homebrew/bin/bin/brew ]; then
 fi
 
 if [ -d /opt/homebrew/bin ]; then
-    export PATH="/opt/homebrew/bin:$PATH"
+    path_prepend "/opt/homebrew/bin"
 fi
 
 if [ -d /opt/homebrew/sbin ]; then
-    export PATH="/opt/homebrew/sbin:$PATH"
+    path_prepend "/opt/homebrew/sbin"
 fi
 
-if [ -d /opt/homebrew/opt/findutils ]; then
-    export PATH="/opt/homebrew/opt/findutils/libexec/gnubin:$PATH"
-fi
-
-if [ -d /opt/homebrew/opt/coreutils ]; then
-    export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
-fi
+# GNU Bins
+for __gnubin in /opt/homebrew/opt/*/libexec/gnubin; do
+    if [ -d "$__gnubin" ]; then
+        path_prepend "$__gnubin"
+    fi
+done
+unset __gnubin
 
 if [ -d /opt/homebrew/opt/python/libexec/bin ]; then
-    export PATH="/opt/homebrew/opt/python/libexec/bin:$PATH"
+    path_prepend "/opt/homebrew/opt/python/libexec/bin"
 fi

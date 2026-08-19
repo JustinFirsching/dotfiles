@@ -3,15 +3,9 @@ if [ -d "${HOME}/.dotnet" ]; then
 fi
 
 if [ -n "${DOTNET_ROOT:-}" ] && [ -d "${DOTNET_ROOT}" ]; then
-    case ":$PATH:" in
-        *":${DOTNET_ROOT}:"*) ;;
-        *) export PATH="${DOTNET_ROOT}:${PATH}" ;;
-    esac
+    path_prepend "$DOTNET_ROOT"
 fi
 
 if [ -n "${DOTNET_ROOT:-}" ] && [ -d "${DOTNET_ROOT}/tools" ]; then
-    case ":$PATH:" in
-        *":${DOTNET_ROOT}/tools:"*) ;;
-        *) export PATH="${PATH}:${DOTNET_ROOT}/tools" ;;
-    esac
+    path_append "$DOTNET_ROOT/tools"
 fi
