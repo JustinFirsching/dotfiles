@@ -76,3 +76,8 @@ keybind = ctrl+plus=increase_font_size:1
 keybind = ctrl+minus=decrease_font_size:1
 keybind = ctrl+zero=reset_font_size
 keybind = super+shift+o=toggle_background_opacity
+
+# ==============================================================================
+# MACOS
+# ==============================================================================
+macos-non-native-fullscreen = visible-menu
