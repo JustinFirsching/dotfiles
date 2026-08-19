@@ -6,7 +6,18 @@ zstyle ':vcs_info:*' enable git
 # This line obtains information from the vcs.
 zstyle ':vcs_info:git*' formats " (%b)"
 
-precmd_functions+=(vcs_info)
+function update_vcs_info() {
+    local is_bare
+    is_bare=$(git rev-parse --is-bare-repository 2>/dev/null)
+
+    if [[ "$is_bare" == true ]]; then
+        vcs_info_msg_0_=''
+    else
+        vcs_info
+    fi
+}
+
+precmd_functions+=(update_vcs_info)
 
 # Enable substitution in the prompt.
 setopt prompt_subst
