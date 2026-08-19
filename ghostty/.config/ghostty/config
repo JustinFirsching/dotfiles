@@ -81,3 +81,4 @@ keybind = super+shift+o=toggle_background_opacity
 # MACOS
 # ==============================================================================
 macos-non-native-fullscreen = visible-menu
+macos-titlebar-proxy-icon = hidden
