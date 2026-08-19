@@ -36,6 +36,7 @@ cursor-style-blink = true
 # ==============================================================================
 
 mouse-hide-while-typing = true
+mouse-scroll-multiplier = discrete:1
 
 # ==============================================================================
 # COLORS - Gruvbox Dark (from foot config / .Xresources)
