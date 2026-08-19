@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Auto-detect main branch
 MAIN_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
@@ -16,7 +16,7 @@ while IFS= read -r branch; do
     worktree_branches["$branch"]=1
 done < <(git worktree list --porcelain | sed -n 's/^branch refs\/heads\///p')
 
-while IFS= read -r branch; do
+while IFS= read -r -u 3 branch; do
     if [[ "$branch" == "$MAIN_BRANCH" ]]; then
         continue
     fi
@@ -31,11 +31,21 @@ while IFS= read -r branch; do
     # Make a syntetic commit with the tree of the branch and parent of the branch, simulating a squash merge, and check if there are any changes compared to main
     synthetic_commit=$(git commit-tree "$(git rev-parse "$branch^{tree}")" -p "$base" -m _)
     if [[ $(git cherry "$MAIN_BRANCH" "$synthetic_commit") == "-"* ]]; then
-        if [[ "$1" = "-f" || "$(read -rp "Delete $branch (squash merged into $MAIN_BRANCH)? [y/N] " confirm && echo "$confirm")" =~ ^[Yy]$ ]]; then
+        should_delete=false
+        if [[ "$1" = "-f" ]]; then
+            should_delete=true
+        else
+            confirm=
+            if read -rp "Delete $branch (squash merged into $MAIN_BRANCH)? [y/N] " confirm && [[ "$confirm" =~ ^[Yy]$ ]]; then
+                should_delete=true
+            fi
+        fi
+
+        if [[ "$should_delete" == true ]]; then
             echo "🗑️ Deleting $branch"
             git branch -D "$branch" > /dev/null
         else
             echo "❌ Skipped $branch"
         fi
     fi
-done < <(git for-each-ref --format='%(refname:short)' refs/heads/)
+done 3< <(git for-each-ref --format='%(refname:short)' refs/heads/)
