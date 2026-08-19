@@ -1,9 +1,8 @@
 return {
-    "seblj/roslyn.nvim",
+    "seblyng/roslyn.nvim",
     dependencies = {
-        "mason-org/mason-lspconfig.nvim",
+        "mason-org/mason.nvim",
     },
-    ft = "cs",
     init = function()
         vim.lsp.config("roslyn", {
             handlers = {
@@ -13,7 +12,4 @@ return {
             },
         })
     end,
-    opts = {
-        lock_target = true,
-    },
 }
