@@ -9,8 +9,6 @@ M.diagnostic_float = {
 
 M.hover = {
     border = "rounded",
-    max_width = 100,
-    max_height = 30,
 }
 
 M.signature_help = {
