@@ -1,0 +1,88 @@
+#!/bin/sh
+set -eu
+
+if [ "$#" -ne 0 ]; then
+    echo "usage: git worktree-migrate" >&2
+    exit 2
+fi
+
+if [ -d .bare ]; then
+    if [ -e .git ]; then
+        echo "error: .git already exists" >&2
+        exit 1
+    fi
+
+    if [ "$(git --git-dir=.bare rev-parse --is-bare-repository)" != true ]; then
+        echo "error: .bare is not a bare Git repository" >&2
+        exit 1
+    fi
+
+    echo 'gitdir: ./.bare' > .git
+    git --git-dir=.bare config core.bare true
+    git --git-dir=.bare config core.logAllRefUpdates true
+    git --git-dir=.bare config worktree.useRelativePaths true
+    exit 0
+fi
+
+source_dir=$(git rev-parse --show-toplevel)
+cd "$source_dir"
+
+if [ -n "$(git status --porcelain)" ]; then
+    echo "error: source repository must be clean" >&2
+    exit 1
+fi
+
+if [ ! -d .git ]; then
+    echo "error: source repository must use a .git directory" >&2
+    exit 1
+fi
+
+if [ "$(git worktree list --porcelain | grep -c '^worktree ')" -ne 1 ]; then
+    echo "error: source repository has linked worktrees" >&2
+    exit 1
+fi
+
+branch=$(git branch --show-current)
+if [ -z "$branch" ]; then
+    echo "error: source repository is in detached HEAD state" >&2
+    exit 1
+fi
+
+if [ -e "$branch" ]; then
+    echo "error: $branch already exists in the repository root" >&2
+    exit 1
+fi
+
+echo "This will move the current checkout into ./$branch and replace .git with .bare."
+printf 'Continue? [y/N] '
+read -r confirm
+case "$confirm" in
+    [Yy]|[Yy][Ee][Ss]) ;;
+    *) exit 0 ;;
+esac
+
+mv .git .bare
+echo 'gitdir: ./.bare' > .git
+
+git config core.bare true
+git config core.logAllRefUpdates true
+git config worktree.useRelativePaths true
+git worktree add "$branch" "$branch"
+
+for source in ./* ./.[!.]* ./..?*; do
+    [ -e "$source" ] || continue
+    name=${source#./}
+
+    case "$name" in
+        .bare|.git|"$branch") continue ;;
+    esac
+
+    if [ -d "$source" ] && [ ! -L "$source" ]; then
+        mkdir -p "$branch/$name"
+        cp -pR "$source"/. "$branch/$name"
+    else
+        cp -p "$source" "$branch/$name"
+    fi
+
+    rm -rf "$source"
+done
