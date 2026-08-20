@@ -1,14 +1,33 @@
 #!/bin/sh
 set -eu
 
-if [ "$#" -ne 0 ]; then
-    echo "usage: git worktree-migrate" >&2
+if [ "$#" -ne 1 ]; then
+    echo "usage: git worktree-migrate <repository>" >&2
     exit 2
 fi
 
+configure_bare_repo() {
+    git --git-dir=.bare config core.bare true
+    git --git-dir=.bare config core.logAllRefUpdates true
+    git --git-dir=.bare config worktree.useRelativePaths true
+}
+
+if [ ! -d "$1" ]; then
+    echo "error: $1 is not a directory" >&2
+    exit 1
+fi
+
+cd "$1"
+
 if [ -d .bare ]; then
     if [ -e .git ]; then
-        echo "error: .git already exists" >&2
+        if [ -f .git ] && [ "$(cat .git)" = 'gitdir: ./.bare' ]; then
+            configure_bare_repo
+            echo "migration already complete"
+            exit 0
+        fi
+
+        echo "error: .git exists but does not point to .bare" >&2
         exit 1
     fi
 
@@ -18,9 +37,7 @@ if [ -d .bare ]; then
     fi
 
     echo 'gitdir: ./.bare' > .git
-    git --git-dir=.bare config core.bare true
-    git --git-dir=.bare config core.logAllRefUpdates true
-    git --git-dir=.bare config worktree.useRelativePaths true
+    configure_bare_repo
     exit 0
 fi
 
@@ -64,9 +81,7 @@ esac
 mv .git .bare
 echo 'gitdir: ./.bare' > .git
 
-git config core.bare true
-git config core.logAllRefUpdates true
-git config worktree.useRelativePaths true
+configure_bare_repo
 git worktree add "$branch" "$branch"
 
 for source in ./* ./.[!.]* ./..?*; do
