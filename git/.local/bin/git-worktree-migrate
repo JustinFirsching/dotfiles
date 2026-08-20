@@ -1,8 +1,8 @@
 #!/bin/sh
 set -eu
 
-if [ "$#" -ne 1 ]; then
-    echo "usage: git worktree-migrate <repository>" >&2
+if [ "$#" -gt 1 ]; then
+    echo "usage: git worktree-migrate [repository]" >&2
     exit 2
 fi
 
@@ -12,12 +12,20 @@ configure_bare_repo() {
     git --git-dir=.bare config worktree.useRelativePaths true
 }
 
-if [ ! -d "$1" ]; then
-    echo "error: $1 is not a directory" >&2
+if [ "$#" -eq 1 ]; then
+    repository=$1
+elif repository_root=$(git rev-parse --show-toplevel 2>/dev/null); then
+    repository=$repository_root
+else
+    repository=.
+fi
+
+if [ ! -d "$repository" ]; then
+    echo "error: $repository is not a directory" >&2
     exit 1
 fi
 
-cd "$1"
+cd "$repository"
 
 if [ -d .bare ]; then
     if [ -e .git ]; then

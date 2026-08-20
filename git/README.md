@@ -21,14 +21,15 @@ git worktree add feature/my-change -b feature/my-change origin/master
 remote or initial worktree. Add a remote, fetch it, and create worktrees when
 ready.
 
-`git worktree-migrate <repository>` converts a clean, standalone clone in
-place.
+`git worktree-migrate [repository]` converts a clean, standalone clone in
+place. Without an argument, it uses the current repository root; outside a Git
+repository, it operates on the current directory.
 It moves `.git` to `.bare`, recreates the currently checked-out branch as the
 initial worktree, and moves ignored files into it. It preserves the Git
 directory, including its configuration, hooks, refs, tags, and reflogs.
 
 When the current directory already contains a valid `.bare` repository and no
-`.git` entry, `git worktree-migrate <repository>` only creates the root `.git`
+`.git` entry, `git worktree-migrate [repository]` only creates the root `.git`
 reference.
 Existing worktrees are left untouched.
 
