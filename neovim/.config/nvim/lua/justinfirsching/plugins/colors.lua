@@ -4,7 +4,8 @@ return {
     priority = 1000,
     config = function()
         require('gruvbox').setup({
-            transparent_mode = false,
+            contrast = 'hard',
+            transparent_mode = true,
             italic = {
                 strings = false,
                 emphasis = false,
@@ -15,15 +16,5 @@ return {
         })
 
         vim.cmd.colorscheme('gruvbox')
-
-        local highlight_groups = {
-            Normal = { bg = 'none' },
-            NormalFloat = { bg = 'none' },
-            FloatBorder = { fg = '#83a598', bg = 'none' },
-        }
-
-        for group, styles in pairs(highlight_groups) do
-            vim.api.nvim_set_hl(0, group, styles)
-        end
     end,
 }
