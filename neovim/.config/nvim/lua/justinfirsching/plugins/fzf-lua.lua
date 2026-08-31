@@ -11,8 +11,8 @@ return {
             files = {
                 actions = {
                     ["ctrl-i"] = {
-                        fn = function(_, opts)
-                            local filepath = opts.last_query
+                        fn = function(selected, opts)
+                            local filepath = selected[1] or opts.last_query
 
                             if type(filepath) ~= "string" or #filepath == 0 then
                                 vim.notify("File name cannot be empty", vim.log.levels.ERROR, {})
