@@ -1,10 +1,5 @@
-#!/bin/sh
-set -eu
-
-if [ "$#" -gt 1 ]; then
-    echo "usage: git worktree-migrate [repository]" >&2
-    exit 2
-fi
+#!/usr/bin/env bash
+set -euo pipefail
 
 configure_bare_repo() {
     git --git-dir=.bare config core.bare true
@@ -12,24 +7,22 @@ configure_bare_repo() {
     git --git-dir=.bare config worktree.useRelativePaths true
 }
 
-if [ "$#" -eq 1 ]; then
-    repository=$1
-elif repository_root=$(git rev-parse --show-toplevel 2>/dev/null); then
-    repository=$repository_root
-else
-    repository=.
-fi
+resolve_source_dir() {
+    if [[ -d $repository/.bare ]]; then
+        source_dir=$repository
+    else
+        source_dir=$(git -C "$repository" rev-parse --show-toplevel)
+    fi
 
-if [ ! -d "$repository" ]; then
-    echo "error: $repository is not a directory" >&2
-    exit 1
-fi
+    cd -P "$source_dir"
+    source_dir=$PWD
+}
 
-cd "$repository"
+handle_existing_bare_repo() {
+    [[ -d .bare ]] || return 0
 
-if [ -d .bare ]; then
-    if [ -e .git ]; then
-        if [ -f .git ] && [ "$(cat .git)" = 'gitdir: ./.bare' ]; then
+    if [[ -e .git ]]; then
+        if [[ -f .git && $(<.git) == 'gitdir: ./.bare' ]]; then
             configure_bare_repo
             echo "migration already complete"
             exit 0
@@ -39,7 +32,7 @@ if [ -d .bare ]; then
         exit 1
     fi
 
-    if [ "$(git --git-dir=.bare rev-parse --is-bare-repository)" != true ]; then
+    if [[ $(git --git-dir=.bare rev-parse --is-bare-repository) != true ]]; then
         echo "error: .bare is not a bare Git repository" >&2
         exit 1
     fi
@@ -47,65 +40,107 @@ if [ -d .bare ]; then
     echo 'gitdir: ./.bare' > .git
     configure_bare_repo
     exit 0
-fi
+}
 
-source_dir=$(git rev-parse --show-toplevel)
-cd "$source_dir"
-
-if [ -n "$(git status --porcelain)" ]; then
-    echo "error: source repository must be clean" >&2
-    exit 1
-fi
-
-if [ ! -d .git ]; then
-    echo "error: source repository must use a .git directory" >&2
-    exit 1
-fi
-
-if [ "$(git worktree list --porcelain | grep -c '^worktree ')" -ne 1 ]; then
-    echo "error: source repository has linked worktrees" >&2
-    exit 1
-fi
-
-branch=$(git branch --show-current)
-if [ -z "$branch" ]; then
-    echo "error: source repository is in detached HEAD state" >&2
-    exit 1
-fi
-
-if [ -e "$branch" ]; then
-    echo "error: $branch already exists in the repository root" >&2
-    exit 1
-fi
-
-echo "This will move the current checkout into ./$branch and replace .git with .bare."
-printf 'Continue? [y/N] '
-read -r confirm
-case "$confirm" in
-    [Yy]|[Yy][Ee][Ss]) ;;
-    *) exit 0 ;;
-esac
-
-mv .git .bare
-echo 'gitdir: ./.bare' > .git
-
-configure_bare_repo
-git worktree add "$branch" "$branch"
-
-for source in ./* ./.[!.]* ./..?*; do
-    [ -e "$source" ] || continue
-    name=${source#./}
-
-    case "$name" in
-        .bare|.git|"$branch") continue ;;
-    esac
-
-    if [ -d "$source" ] && [ ! -L "$source" ]; then
-        mkdir -p "$branch/$name"
-        cp -pR "$source"/. "$branch/$name"
-    else
-        cp -p "$source" "$branch/$name"
+validate_source_repo() {
+    if [[ ! -d .git ]]; then
+        echo "error: source repository must use a .git directory" >&2
+        exit 1
     fi
 
-    rm -rf "$source"
-done
+    branch=$(git branch --show-current)
+    if [[ -z $branch ]]; then
+        echo "error: source repository is in detached HEAD state" >&2
+        exit 1
+    fi
+
+    if [[ -n $(git submodule status) ]]; then
+        echo "error: source repository contains submodules" >&2
+        exit 1
+    fi
+}
+
+collect_linked_worktrees() {
+    linked_worktrees=()
+    while read -r worktree; do
+        [[ $worktree == "$source_dir" ]] && continue
+
+        if [[ ! -e $worktree ]]; then
+            echo "error: linked worktree does not exist: $worktree" >&2
+            exit 1
+        fi
+
+        linked_worktrees+=("$worktree")
+    done < <(
+        git worktree list --porcelain |
+            awk '/^worktree / { print substr($0, 10) }' |
+            sort -r
+    )
+}
+
+stage_linked_worktrees() {
+    local temporary_dir=$1
+
+    mkdir "$temporary_dir/worktrees"
+    for index in "${!linked_worktrees[@]}"; do
+        mv "${linked_worktrees[$index]}" "$temporary_dir/worktrees/$index"
+    done
+}
+
+migrate_current_checkout() {
+    local temporary_dir=$1
+
+    mv "$source_dir" "$temporary_dir/current"
+    mkdir "$source_dir"
+    mv "$temporary_dir/current/.git" "$source_dir/.bare"
+    echo 'gitdir: ./.bare' > "$source_dir/.git"
+    cd "$source_dir"
+    configure_bare_repo
+
+    current=${branch##*/}
+    git worktree add --no-checkout "$current" "$branch"
+    mv "$current/.git" "$temporary_dir/current.git"
+    rmdir "$current"
+    mv "$temporary_dir/current" "$current"
+    mv "$temporary_dir/current.git" "$current/.git"
+    cp .bare/index "$(git -C "$current" rev-parse --absolute-git-dir)/index"
+}
+
+restore_linked_worktrees() {
+    local temporary_dir=$1
+
+    if (( ${#linked_worktrees[@]} == 0 )); then
+        return 0
+    fi
+
+    restored_worktrees=()
+    for index in "${!linked_worktrees[@]}"; do
+        worktree=${linked_worktrees[$index]}
+        destination=$source_dir/${worktree##*/}
+        if [[ -e $destination ]]; then
+            echo "error: destination already exists: $destination" >&2
+            exit 1
+        fi
+        mv "$temporary_dir/worktrees/$index" "$destination"
+        restored_worktrees+=("$destination")
+    done
+
+    git worktree repair "${restored_worktrees[@]}"
+}
+
+if (( $# > 1 )); then
+    echo "usage: git worktree-migrate [repository]" >&2
+    exit 2
+fi
+
+repository=${1:-.}
+resolve_source_dir
+handle_existing_bare_repo
+validate_source_repo
+collect_linked_worktrees
+temporary_dir="$source_dir.worktree-migrate.$$"
+mkdir "$temporary_dir"
+stage_linked_worktrees "$temporary_dir"
+migrate_current_checkout "$temporary_dir"
+restore_linked_worktrees "$temporary_dir"
+rm -rf "$temporary_dir"
