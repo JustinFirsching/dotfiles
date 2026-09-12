@@ -3,6 +3,9 @@ return {
     dependencies = {
         "mason-org/mason.nvim",
     },
+    opts = {
+        filewatching = "roslyn",
+    },
     init = function()
         vim.lsp.config("roslyn", {
             handlers = {
