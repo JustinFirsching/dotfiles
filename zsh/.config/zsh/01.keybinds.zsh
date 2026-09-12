@@ -11,6 +11,8 @@ fi
 
 typeset -A key
 
+bindkey -e
+
 bindkey "^A" beginning-of-line                      # Ctrl+A
 bindkey "^E" end-of-line                            # Ctrl+E
 bindkey "${terminfo[khome]}" beginning-of-line      # Home key
