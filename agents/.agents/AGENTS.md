@@ -2,6 +2,12 @@
 
 These defaults apply across repositories.
 
+- Unless instructed otherwise, keep responses concise and terminal-friendly.
+  Lead with the outcome, then include only details needed to understand
+  decisions, changes, failures, or required next steps. Do not restate the
+  request, narrate routine work, recap the response, offer optional extras, or
+  dump command output unless it explains a failure. Use the shortest clear
+  format without sacrificing correctness or essential context.
 - Use Conventional Commits with a meaningful scope.
 - Worktree placement is a local environment constraint. Unless the user
   explicitly requests otherwise, create every Git worktree inside the
