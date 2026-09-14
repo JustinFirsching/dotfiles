@@ -1,78 +1,72 @@
 ---
 name: canonical-git-worktrees
-description: Create and manage Git worktrees in the canonical bare-repository layout. Use when creating, locating, migrating, or modifying worktrees.
+description: Create, locate, migrate, or manage Git worktrees in the local canonical bare-repository layout. Use whenever a task requires a new worktree, the `/cwt` workflow, or diagnosing worktree paths. Keep worktrees under the canonical repository root beside `.bare/`.
 ---
 
-# Git Worktrees
+# Canonical Git Worktrees
 
-Use the canonical layout when a repository has a bare Git directory:
+Keep every worktree inside the canonical repository root, as a sibling of `.bare/`. Do not create worktrees in temporary, session-state, home-level, or repository-external directories.
+
+## Locate the Canonical Root
+
+From an existing worktree:
+
+```sh
+git rev-parse --path-format=absolute --git-common-dir
+```
+
+In the canonical layout this resolves to `<canonical-root>/.bare`; its parent is the canonical root. Confirm the layout with:
+
+```sh
+git worktree list --porcelain
+```
+
+Do not infer the root from the current directory name.
+
+## Create a Worktree
+
+Run the command from the canonical root and use a relative path beneath it:
+
+```sh
+git worktree add feature/my-change -b feature/my-change <base-ref>
+```
+
+Before creation:
+
+- Confirm the target path does not already exist.
+- Confirm the branch is not already checked out elsewhere.
+- Resolve the intended base explicitly when it is not the current `HEAD`.
+- Do not overwrite or relocate an existing worktree without user approval.
+
+After creation, switch the harness working directory to the absolute worktree
+path before editing. In Copilot CLI, run:
 
 ```text
-repository/
-├── .bare/
-├── .git
-├── master/
-└── feature/my-change/
+/cd <absolute-worktree-path>
 ```
 
-Worktree directories belong under the canonical repository root, alongside
-`.bare/`.
+## Copilot CLI Integration
 
-## Locating the canonical root
-
-From any worktree, inspect the shared Git directory:
-
-```sh
-git rev-parse --git-common-dir
-```
-
-Resolve that path to an absolute path. In the canonical layout, its parent is
-the repository root containing `.bare/` and the root `.git` file.
-
-Run worktree management commands from that canonical root:
-
-```sh
-git worktree list
-git worktree add feature/my-change -b feature/my-change origin/master
-```
-
-After creating a worktree, run `/cd <worktree>` to make it the current Copilot
-CLI working directory before continuing.
-
-## Copilot CLI command
-
-Use the user-level `/cwt` command to start a task in a new worktree and a new
-Copilot CLI session:
+When Copilot CLI exposes the user-level worktree extension, prefer:
 
 ```text
 /cwt [--base <ref>] [--branch <branch>] [task prompt]
 ```
 
-The command asks the model configured for the `general-purpose` subagent for a
-concise branch name based on the task, falling back to the active session model
-when no general-purpose model is configured. Branch naming always uses low
-reasoning effort. The command creates that branch and worktree from the current
-`HEAD`, opens and focuses a new Copilot session in that worktree, and submits
-the original prompt there. The new task session still uses the model selected
-in the originating session. Use `--base <ref>` to select another starting
-point or `--branch <branch>` to supply the exact branch and worktree path.
-`/cw` and `/canonical-worktree` are aliases.
+Aliases: `/cw` and `/canonical-worktree`.
 
-When `--branch` is supplied without a task prompt, the command creates and
-focuses an empty session without submitting a message.
+The command creates the branch and worktree from the selected base, opens a Copilot session there, and submits the optional task prompt. With `--branch` and no prompt, it opens an empty session. After creation, verify the focused session is rooted in the new worktree before editing.
 
-If the current repository is still a standalone clone with a `.git` directory,
-the command runs `git worktree-migrate` before creating the requested worktree.
+`/cwt` is a Copilot CLI extension command, not functionality provided by this
+skill. In other harnesses, follow the standard Git workflow above and use the
+harness's working-directory mechanism.
 
-## Converting a standalone clone
+## Migrate a Standalone Clone
 
-When a standalone clone should use the canonical layout, run this helper from
-the clone:
+If the repository still uses a standalone `.git` directory, run:
 
 ```sh
 git worktree-migrate
 ```
 
-The helper requires a clean, single-worktree checkout and asks for confirmation
-before moving the checkout into its initial worktree. After conversion, create
-additional worktrees under the canonical root.
+Migration requires a clean, single-worktree checkout and user confirmation. Do not bypass those safeguards. After migration, create all additional worktrees beneath the canonical root.
