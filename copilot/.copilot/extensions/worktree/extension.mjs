@@ -1,6 +1,7 @@
 import { execFile } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { access } from "node:fs/promises";
+import { userInfo } from "node:os";
 import { basename, dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { promisify } from "node:util";
 
@@ -32,21 +33,25 @@ session = await joinSession({
 
 async function createWorktree({ prompt, requestedBranch, baseRef }) {
     const { workingDirectory, selectedModel } = await session.rpc.metadata.snapshot();
-    const baseCommit = (
-        await git(workingDirectory, ["rev-parse", "--verify", `${baseRef}^{commit}`])
-    ).trim();
     const canonicalRoot = await ensureCanonicalRoot(workingDirectory);
     const { workingDirectory: activeWorkingDirectory } =
         await session.rpc.metadata.snapshot();
+    const baseCommit = await resolveBaseCommit(
+        activeWorkingDirectory,
+        canonicalRoot,
+        baseRef,
+    );
     const suggestedBranch =
         requestedBranch ??
         (await generateBranchName(prompt, activeWorkingDirectory, selectedModel));
+    const aliases = await getBranchAliases(canonicalRoot);
     const branch = await chooseBranch(
         canonicalRoot,
         suggestedBranch,
         requestedBranch !== undefined,
+        aliases,
     );
-    const worktreePath = branch;
+    const worktreePath = getWorktreePath(branch, aliases);
     const destination = resolve(canonicalRoot, worktreePath);
     const destinationRelative = relative(canonicalRoot, destination);
 
@@ -125,6 +130,37 @@ async function ensureCanonicalRoot(workingDirectory) {
     return dirname(commonDir);
 }
 
+async function resolveBaseCommit(workingDirectory, canonicalRoot, baseRef) {
+    const resolveRevision = async (directory, ref) => {
+        const revision = `${ref}^{commit}`;
+        const exitCode = await gitExitCode(directory, [
+            "rev-parse",
+            "--verify",
+            "--quiet",
+            revision,
+        ]);
+        return exitCode === 0
+            ? (await git(directory, ["rev-parse", "--verify", revision])).trim()
+            : undefined;
+    };
+
+    const baseCommit = await resolveRevision(workingDirectory, baseRef);
+    if (baseCommit !== undefined) {
+        return baseCommit;
+    }
+
+    if (baseRef === "HEAD" && resolve(workingDirectory) === resolve(canonicalRoot)) {
+        const remoteHeadCommit = await resolveRevision(canonicalRoot, "origin/HEAD");
+        if (remoteHeadCommit !== undefined) {
+            return remoteHeadCommit;
+        }
+    }
+
+    throw new Error(
+        `Base ref ${baseRef} does not resolve to a commit in ${workingDirectory}.`,
+    );
+}
+
 async function getCommonDir(workingDirectory) {
     const commonDirOutput = await git(workingDirectory, [
         "rev-parse",
@@ -173,11 +209,17 @@ function parseArgs(rawArgs) {
     return { prompt: prompt || undefined, requestedBranch, baseRef };
 }
 
-async function chooseBranch(canonicalRoot, suggestedBranch, isExplicit) {
+async function chooseBranch(canonicalRoot, suggestedBranch, isExplicit, aliases) {
     await git(canonicalRoot, ["check-ref-format", "--branch", suggestedBranch]);
 
     if (isExplicit) {
-        if (await branchOrPathExists(canonicalRoot, suggestedBranch)) {
+        if (
+            await branchOrPathExists(
+                canonicalRoot,
+                suggestedBranch,
+                getWorktreePath(suggestedBranch, aliases),
+            )
+        ) {
             throw new Error(`Branch or worktree path already exists: ${suggestedBranch}`);
         }
         return suggestedBranch;
@@ -186,13 +228,19 @@ async function chooseBranch(canonicalRoot, suggestedBranch, isExplicit) {
     for (let suffix = 1; ; suffix += 1) {
         const candidate =
             suffix === 1 ? suggestedBranch : `${suggestedBranch}-${suffix}`;
-        if (!(await branchOrPathExists(canonicalRoot, candidate))) {
+        if (
+            !(await branchOrPathExists(
+                canonicalRoot,
+                candidate,
+                getWorktreePath(candidate, aliases),
+            ))
+        ) {
             return candidate;
         }
     }
 }
 
-async function branchOrPathExists(canonicalRoot, branch) {
+async function branchOrPathExists(canonicalRoot, branch, worktreePath) {
     const branchExitCode = await gitExitCode(canonicalRoot, [
         "show-ref",
         "--verify",
@@ -207,7 +255,7 @@ async function branchOrPathExists(canonicalRoot, branch) {
     }
 
     try {
-        await access(resolve(canonicalRoot, branch));
+        await access(resolve(canonicalRoot, worktreePath));
         return true;
     } catch (error) {
         if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") {
@@ -217,13 +265,41 @@ async function branchOrPathExists(canonicalRoot, branch) {
     }
 }
 
-async function generateBranchName(prompt, workingDirectory, activeModel) {
-    const connection = session.connection;
-    if (!connection?.sendRequest) {
-        throw new Error("The Copilot CLI session API is unavailable.");
+async function getBranchAliases(canonicalRoot) {
+    const emails = await gitConfigValues(canonicalRoot, ["--get-all", "user.email"]);
+    const aliases = new Set(
+        emails
+            .map((email) => email.split("@", 1)[0]?.trim().toLowerCase())
+            .filter(Boolean),
+    );
+    const username = userInfo().username.trim().toLowerCase();
+    if (username) {
+        aliases.add(username);
+    }
+    return aliases;
+}
+
+function getWorktreePath(branch, aliases) {
+    const segments = branch.split("/");
+    const firstSegment = segments[0]?.toLowerCase();
+    const secondSegment = segments[1]?.toLowerCase();
+
+    if (segments.length > 1 && aliases.has(firstSegment)) {
+        segments.shift();
+    } else if (
+        segments.length > 2 &&
+        firstSegment === "users" &&
+        aliases.has(secondSegment)
+    ) {
+        segments.splice(0, 2);
     }
 
-    const model = await getBranchNameModel(activeModel);
+    return segments.join("_");
+}
+
+async function generateBranchName(prompt, workingDirectory, activeModel) {
+    const connection = getConnection();
+    const model = await getBranchNameModel(connection, activeModel);
     const sessionId = randomUUID();
     let created = false;
     try {
@@ -276,12 +352,7 @@ async function generateBranchName(prompt, workingDirectory, activeModel) {
     }
 }
 
-async function getBranchNameModel(activeModel) {
-    const connection = session.connection;
-    if (!connection?.sendRequest) {
-        throw new Error("The Copilot CLI session API is unavailable.");
-    }
-
+async function getBranchNameModel(connection, activeModel) {
     const { settings } = await connection.sendRequest("user.settings.get", {});
     const model =
         settings.subagents?.value?.agents?.["general-purpose"]?.model;
@@ -299,11 +370,7 @@ async function getBranchNameModel(activeModel) {
 }
 
 async function startSession(worktree, prompt) {
-    const connection = session.connection;
-    if (!connection?.sendRequest) {
-        throw new Error("The Copilot CLI session API is unavailable.");
-    }
-
+    const connection = getConnection();
     const { selectedModel } = await session.rpc.metadata.snapshot();
     const sessionId = randomUUID();
 
@@ -339,6 +406,14 @@ async function startSession(worktree, prompt) {
         );
     }
     await promptRequest;
+}
+
+function getConnection() {
+    const connection = session.connection;
+    if (!connection?.sendRequest) {
+        throw new Error("The Copilot CLI session API is unavailable.");
+    }
+    return connection;
 }
 
 async function createRuntimeSession(
@@ -390,28 +465,16 @@ function usage(message) {
 
 async function git(cwd, args) {
     try {
-        const { stdout } = await execFileAsync("git", args, {
-            cwd,
-            encoding: "utf8",
-            maxBuffer: 10 * 1024 * 1024,
-        });
+        const { stdout } = await execGit(cwd, args);
         return stdout;
     } catch (error) {
-        const stderr =
-            error && typeof error === "object" && "stderr" in error
-                ? String(error.stderr).trim()
-                : "";
-        throw new Error(stderr || `git ${args.join(" ")} failed`);
+        throw new Error(formatGitError(error, args));
     }
 }
 
 async function gitExitCode(cwd, args) {
     try {
-        await execFileAsync("git", args, {
-            cwd,
-            encoding: "utf8",
-            maxBuffer: 10 * 1024 * 1024,
-        });
+        await execGit(cwd, args);
         return 0;
     } catch (error) {
         if (error && typeof error === "object" && "code" in error) {
@@ -419,4 +482,41 @@ async function gitExitCode(cwd, args) {
         }
         throw error;
     }
+}
+
+async function gitConfigValues(cwd, args) {
+    const gitArgs = ["config", ...args];
+    try {
+        const { stdout } = await execGit(cwd, gitArgs);
+        return stdout
+            .split(/\r?\n/)
+            .map((value) => value.trim())
+            .filter(Boolean);
+    } catch (error) {
+        if (
+            error &&
+            typeof error === "object" &&
+            "code" in error &&
+            Number(error.code) === 1
+        ) {
+            return [];
+        }
+        throw new Error(formatGitError(error, gitArgs));
+    }
+}
+
+function execGit(cwd, args) {
+    return execFileAsync("git", args, {
+        cwd,
+        encoding: "utf8",
+        maxBuffer: 10 * 1024 * 1024,
+    });
+}
+
+function formatGitError(error, args) {
+    const stderr =
+        error && typeof error === "object" && "stderr" in error
+            ? String(error.stderr).trim()
+            : "";
+    return stderr || `git ${args.join(" ")} failed`;
 }
