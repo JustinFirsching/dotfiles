@@ -1,5 +1,4 @@
 import { execFile } from "node:child_process";
-import { randomUUID } from "node:crypto";
 import { access } from "node:fs/promises";
 import { userInfo } from "node:os";
 import { basename, dirname, isAbsolute, relative, resolve, sep } from "node:path";
@@ -15,7 +14,7 @@ const handleWorktreeCommand = async ({ args }) => {
     try {
         const request = parseArgs(args);
         const worktree = await createWorktree(request);
-        await startSession(worktree, request.prompt);
+        await switchToWorktree(worktree, request.prompt);
     } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         await session.log(message, { level: "error" });
@@ -32,10 +31,11 @@ session = await joinSession({
 });
 
 async function createWorktree({ prompt, requestedBranch, baseRef }) {
-    const { workingDirectory, selectedModel } = await session.rpc.metadata.snapshot();
-    const canonicalRoot = await ensureCanonicalRoot(workingDirectory);
-    const { workingDirectory: activeWorkingDirectory } =
-        await session.rpc.metadata.snapshot();
+    const { workingDirectory } = await session.rpc.metadata.snapshot();
+    const {
+        canonicalRoot,
+        activeWorkingDirectory,
+    } = await prepareRepository(workingDirectory);
     const baseCommit = await resolveBaseCommit(
         activeWorkingDirectory,
         canonicalRoot,
@@ -43,7 +43,7 @@ async function createWorktree({ prompt, requestedBranch, baseRef }) {
     );
     const suggestedBranch =
         requestedBranch ??
-        (await generateBranchName(prompt, activeWorkingDirectory, selectedModel));
+        (await generateBranchName(session, prompt, activeWorkingDirectory));
     const aliases = await getBranchAliases(canonicalRoot);
     const branch = await chooseBranch(
         canonicalRoot,
@@ -68,17 +68,19 @@ async function createWorktree({ prompt, requestedBranch, baseRef }) {
     if (firstSegment === ".bare" || firstSegment === ".git") {
         throw new Error(`The worktree path cannot use the reserved ${firstSegment} entry.`);
     }
-    await git(canonicalRoot, ["check-ref-format", "--branch", branch]);
     await git(canonicalRoot, ["worktree", "add", "-b", branch, destination, baseCommit]);
 
     return { branch, path: destination };
 }
 
-async function ensureCanonicalRoot(workingDirectory) {
+async function prepareRepository(workingDirectory) {
     let commonDir = await getCommonDir(workingDirectory);
 
     if (basename(commonDir) === ".bare") {
-        return dirname(commonDir);
+        return {
+            canonicalRoot: dirname(commonDir),
+            activeWorkingDirectory: workingDirectory,
+        };
     }
 
     if (basename(commonDir) !== ".git") {
@@ -127,7 +129,10 @@ async function ensureCanonicalRoot(workingDirectory) {
         throw new Error("git worktree-migrate did not create the canonical .bare layout.");
     }
 
-    return dirname(commonDir);
+    return {
+        canonicalRoot: dirname(commonDir),
+        activeWorkingDirectory: migratedWorkingDirectory,
+    };
 }
 
 async function resolveBaseCommit(workingDirectory, canonicalRoot, baseRef) {
@@ -297,164 +302,38 @@ function getWorktreePath(branch, aliases) {
     return segments.join("_");
 }
 
-async function generateBranchName(prompt, workingDirectory, activeModel) {
-    const connection = getConnection();
-    const model = await getBranchNameModel(connection, activeModel);
-    const sessionId = randomUUID();
-    let created = false;
-    try {
-        await createRuntimeSession(connection, {
-            sessionId,
-            model,
-            reasoningEffort: "low",
-            workingDirectory,
-            requestExtensions: false,
-            availableTools: [],
-            enableSessionStore: false,
-            infiniteSessions: { enabled: false },
-        });
-        created = true;
-        await connection.sendRequest("session.send", {
-            sessionId,
-            prompt: [
-                "Create a concise Git branch name for the task below.",
-                "Summarize the intent instead of copying the full task.",
-                "Output exactly one lowercase branch name using letters, digits, hyphens, and optional slashes.",
-                "Do not include quotes, Markdown, explanation, or a refs/heads prefix.",
-                "",
-                `Task: ${prompt}`,
-            ].join("\n"),
-            wait: true,
-        });
-
-        const page = await connection.sendRequest("session.eventLog.read", {
-            sessionId,
-            direction: "backward",
-            includeEphemeral: false,
-            max: 10,
-            types: ["assistant.message"],
-            waitMs: 0,
-        });
-        const content = page.events
-            .find((event) => event.type === "assistant.message")
-            ?.data?.content?.trim();
-        const branch = content?.split(/\r?\n/, 1)[0]?.trim();
-
-        if (!branch) {
-            throw new Error("The model did not return a branch name.");
-        }
-        await git(workingDirectory, ["check-ref-format", "--branch", branch]);
-        return branch;
-    } finally {
-        if (created) {
-            await connection.sendRequest("session.delete", { sessionId });
-        }
-    }
-}
-
-async function getBranchNameModel(connection, activeModel) {
-    const { settings } = await connection.sendRequest("user.settings.get", {});
-    const model =
-        settings.subagents?.value?.agents?.["general-purpose"]?.model;
-    if (typeof model === "string" && model.trim()) {
-        return model.trim();
-    }
-
-    if (typeof activeModel === "string" && activeModel.trim()) {
-        return activeModel.trim();
-    }
-
-    throw new Error(
-        "No model is configured for the general-purpose subagent or active session.",
-    );
-}
-
-async function startSession(worktree, prompt) {
-    const connection = getConnection();
-    const { selectedModel } = await session.rpc.metadata.snapshot();
-    const sessionId = randomUUID();
-
-    try {
-        await createRuntimeSession(connection, {
-            sessionId,
-            model: selectedModel,
-            workingDirectory: worktree.path,
-            requestExtensions: true,
-        });
-    } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        throw new Error(
-            `Created worktree ${worktree.path}, but could not create its Copilot session: ${message}`,
-        );
-    }
-
-    await session.log(
-        `Created ${worktree.path} and started session ${sessionId.slice(0, 8)}.`,
-    );
-
-    const promptRequest = prompt
-        ? sendPrompt(connection, sessionId, prompt)
-        : Promise.resolve();
-    const foreground = await connection.sendRequest("session.setForeground", {
-        sessionId,
+async function generateBranchName(session, prompt, workingDirectory) {
+    const { answer } = await session.rpc.ui.ephemeralQuery({
+        question: [
+            "Create a concise Git branch name for the task below.",
+            "Summarize the intent instead of copying the full task.",
+            "Output exactly one lowercase branch name using letters, digits, hyphens, and optional slashes.",
+            "Do not include quotes, Markdown, explanation, or a refs/heads prefix.",
+            "",
+            `Task: ${prompt}`,
+        ].join("\n"),
     });
-    if (!foreground.success) {
-        throw new Error(
-            `Started session ${sessionId}, but could not focus it: ${
-                foreground.error ?? "unknown error"
-            }`,
-        );
+    const branch = answer?.split(/\r?\n/, 1)[0]?.trim();
+
+    if (!branch) {
+        throw new Error("The model did not return a branch name.");
     }
-    await promptRequest;
+    await git(workingDirectory, ["check-ref-format", "--branch", branch]);
+    return branch;
 }
 
-function getConnection() {
-    const connection = session.connection;
-    if (!connection?.sendRequest) {
-        throw new Error("The Copilot CLI session API is unavailable.");
-    }
-    return connection;
-}
-
-async function createRuntimeSession(
-    connection,
-    {
-        sessionId,
-        model,
-        reasoningEffort,
-        workingDirectory,
-        requestExtensions,
-        availableTools,
-        enableSessionStore = true,
-        infiniteSessions = { enabled: true },
-    },
-) {
-    const created = await connection.sendRequest("session.create", {
-        sessionId,
-        model,
-        reasoningEffort,
-        clientName: "copilot-cli",
-        workingDirectory,
-        enableConfigDiscovery: requestExtensions,
-        enableFileHooks: requestExtensions,
-        enableSessionStore,
-        enableSkills: requestExtensions,
-        infiniteSessions,
-        includeSubAgentStreamingEvents: true,
-        requestExtensions,
-        availableTools,
+async function switchToWorktree(worktree, prompt) {
+    await session.rpc.metadata.setWorkingDirectory({
+        workingDirectory: worktree.path,
     });
-    if (created.sessionId !== sessionId) {
-        throw new Error(`The runtime returned an unexpected session ID: ${created.sessionId}`);
-    }
-}
 
-async function sendPrompt(connection, sessionId, prompt) {
-    await connection.sendRequest("session.send", {
-        sessionId,
-        prompt,
-        displayPrompt: prompt,
-    });
+    await session.log(`Created ${worktree.path} and switched the session there.`);
+    if (prompt) {
+        await session.send({
+            prompt,
+            displayPrompt: prompt,
+        });
+    }
 }
 
 function usage(message) {
