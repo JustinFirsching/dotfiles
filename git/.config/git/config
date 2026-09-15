@@ -25,3 +25,4 @@
 	useRelativePaths = true
 [alias]
     uncommit = reset --soft HEAD^
+    cwt = canonical-worktree
