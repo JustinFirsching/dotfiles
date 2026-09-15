@@ -1,0 +1,240 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+    echo "usage: git canonical-worktree <init|clone|migrate|new> ..." >&2
+    echo "   or: git cwt <init|clone|migrate|new> ..." >&2
+}
+
+validate_empty_directory() {
+    local directory=$1
+
+    if [[ -e $directory && ! -d $directory ]]; then
+        echo "error: $directory is not a directory" >&2
+        exit 1
+    fi
+    if [[ -d $directory && -n $(find "$directory" -mindepth 1 -maxdepth 1 -print -quit) ]]; then
+        echo "error: $directory is not empty" >&2
+        exit 1
+    fi
+}
+
+configure_bare_repo() {
+    local git_dir=$1
+
+    git --git-dir="$git_dir" config core.bare true
+    git --git-dir="$git_dir" config core.logAllRefUpdates true
+    git --git-dir="$git_dir" config worktree.useRelativePaths true
+}
+
+cmd_init() {
+    if (($# > 1)); then
+        echo "usage: git canonical-worktree init [directory]" >&2
+        exit 2
+    fi
+
+    local directory=${1:-.}
+    validate_empty_directory "$directory"
+
+    mkdir -p "$directory"
+    git init --bare "$directory/.bare"
+    echo 'gitdir: ./.bare' > "$directory/.git"
+    configure_bare_repo "$directory/.bare"
+}
+
+cmd_clone() {
+    if (($# < 1 || $# > 2)); then
+        echo "usage: git canonical-worktree clone <remote-url> [directory]" >&2
+        exit 2
+    fi
+
+    local remote_url=$1 directory=${2:-}
+    if [[ -z $directory ]]; then
+        directory=${remote_url%/}
+        directory=${directory##*/}
+        directory=${directory%.git}
+    fi
+    if [[ -z $directory ]]; then
+        echo "error: could not derive a directory from $remote_url" >&2
+        exit 1
+    fi
+    validate_empty_directory "$directory"
+
+    mkdir -p "$directory"
+    git clone --bare "$remote_url" "$directory/.bare"
+    echo 'gitdir: ./.bare' > "$directory/.git"
+    configure_bare_repo "$directory/.bare"
+
+    local default_branch
+    if ! default_branch=$(git -C "$directory" symbolic-ref --quiet --short HEAD); then
+        echo "error: could not determine origin's default branch" >&2
+        exit 1
+    fi
+    git -C "$directory" config remote.origin.fetch \
+        "+refs/heads/$default_branch:refs/remotes/origin/$default_branch"
+    git -C "$directory" fetch --prune origin "$default_branch"
+    local default_directory=${default_branch//\//_}
+
+    git -C "$directory" worktree add "$default_directory" "$default_branch"
+    git -C "$directory/$default_directory" branch --set-upstream-to="origin/$default_branch" "$default_branch"
+}
+
+migrate_resolve_source_dir() {
+    if [[ -d $repository/.bare ]]; then
+        source_dir=$repository
+    else
+        source_dir=$(git -C "$repository" rev-parse --show-toplevel)
+    fi
+
+    cd -P "$source_dir"
+    source_dir=$PWD
+}
+
+migrate_handle_existing_bare_repo() {
+    [[ -d .bare ]] || return 0
+
+    if [[ -f .git && $(<.git) == 'gitdir: ./.bare' ]]; then
+        configure_bare_repo .bare
+        echo "migration already complete"
+        exit 0
+    fi
+    if [[ -e .git ]]; then
+        echo "error: .git exists but does not point to .bare" >&2
+        exit 1
+    fi
+
+    if [[ $(git --git-dir=.bare rev-parse --is-bare-repository) != true ]]; then
+        echo "error: .bare is not a bare Git repository" >&2
+        exit 1
+    fi
+
+    echo 'gitdir: ./.bare' > .git
+    configure_bare_repo .bare
+    exit 0
+}
+
+migrate_validate_source_repo() {
+    if [[ ! -d .git ]]; then
+        echo "error: source repository must use a .git directory" >&2
+        exit 1
+    fi
+
+    source_branch=$(git branch --show-current)
+    if [[ -z $source_branch ]]; then
+        echo "error: source repository is in detached HEAD state" >&2
+        exit 1
+    fi
+
+    if [[ -n $(git submodule status) ]]; then
+        echo "error: source repository contains submodules" >&2
+        exit 1
+    fi
+}
+
+migrate_reject_nested_worktrees() {
+    while read -r worktree; do
+        [[ $worktree == "$source_dir" ]] && continue
+
+        if [[ $worktree == "$source_dir"/* ]]; then
+            echo "error: linked worktree is inside the repository root and cannot remain in place: $worktree" >&2
+            exit 1
+        fi
+        if [[ ! -e $worktree ]]; then
+            echo "error: linked worktree does not exist: $worktree" >&2
+            exit 1
+        fi
+    done < <(
+        git worktree list --porcelain |
+            awk '/^worktree / { print substr($0, 10) }' |
+            sort -r
+    )
+}
+
+migrate_current_checkout() {
+    local temporary_dir=$1
+
+    mv "$source_dir" "$temporary_dir/current"
+    mkdir "$source_dir"
+    mv "$temporary_dir/current/.git" "$source_dir/.bare"
+    echo 'gitdir: ./.bare' > "$source_dir/.git"
+    cd "$source_dir"
+    configure_bare_repo .bare
+
+    current=${source_branch##*/}
+    git worktree add --no-checkout "$current" "$source_branch"
+    mv "$current/.git" "$temporary_dir/current.git"
+    rmdir "$current"
+    mv "$temporary_dir/current" "$current"
+    mv "$temporary_dir/current.git" "$current/.git"
+    cp .bare/index "$(git -C "$current" rev-parse --absolute-git-dir)/index"
+}
+
+migrate_repair_linked_worktrees() {
+    while read -r worktree; do
+        git worktree repair "$worktree"
+    done < <(
+        git worktree list --porcelain |
+            awk '/^worktree / { sub(/^worktree /, ""); print }'
+    )
+}
+
+cmd_migrate() {
+    if (($# > 1)); then
+        echo "usage: git canonical-worktree migrate [repository]" >&2
+        exit 2
+    fi
+
+    local repository=${1:-.} source_branch
+    migrate_resolve_source_dir
+    migrate_handle_existing_bare_repo
+    migrate_validate_source_repo
+    migrate_reject_nested_worktrees
+    local temporary_dir="$source_dir.worktree-migrate.$$"
+    mkdir "$temporary_dir"
+    migrate_current_checkout "$temporary_dir"
+    migrate_repair_linked_worktrees
+    rm -rf "$temporary_dir"
+}
+
+cmd_new() {
+    if (($# < 1 || $# > 2)); then
+        echo "usage: git canonical-worktree new <branch> [base]" >&2
+        exit 2
+    fi
+
+    local branch=$1 base=${2:-HEAD}
+    if ! git check-ref-format --branch "$branch" >/dev/null 2>&1; then
+        echo "error: invalid branch name: $branch" >&2
+        exit 2
+    fi
+
+    local common_dir root
+    if ! common_dir=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null); then
+        echo "error: not inside a Git repository" >&2
+        exit 1
+    fi
+    if [[ $common_dir != */.bare ]]; then
+        cmd_migrate
+        common_dir=$(git rev-parse --path-format=absolute --git-common-dir)
+    fi
+    root=${common_dir%/.bare}
+    local local_dir=${branch//\//_}
+    if [[ -e "$root/$local_dir" ]]; then
+        echo "error: worktree path already exists: $root/$local_dir" >&2
+        exit 1
+    fi
+
+    git -C "$root" worktree add -b "$branch" -- "$local_dir" "$base" >&2
+    printf '%s\n' "$root/$local_dir"
+}
+
+case ${1:-} in
+    init) shift; cmd_init "$@" ;;
+    clone) shift; cmd_clone "$@" ;;
+    migrate) shift; cmd_migrate "$@" ;;
+    new) shift; cmd_new "$@" ;;
+    *)
+        usage
+        exit 2
+        ;;
+esac
