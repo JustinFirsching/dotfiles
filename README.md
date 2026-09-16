@@ -35,6 +35,7 @@ This repo has evolved over time as I've switched between different setups. Here'
 - **gnupg** - GPG agent config with graphical pinentry
 - **fonts** - Custom fonts
 - **opencode** - OpenCode AI assistant config
+- **omp** - Oh My Pi agent configuration
 
 ## Installation
 
@@ -46,6 +47,9 @@ stow -t ~ hyprland
 
 # Install waybar
 stow -t ~ waybar
+
+# Install OMP agent config
+stow -t ~ omp
 
 # Install multiple at once
 stow -t ~ zsh tmux neovim foot

@@ -1,0 +1,28 @@
+setupVersion: 2
+theme:
+  dark: dark-gruvbox
+  light: light-gruvbox
+symbolPreset: unicode
+defaultThinkingLevel: auto
+personality: default
+composer:
+  shape: band
+advisor:
+  enabled: false
+error:
+  notify: "on"
+stt:
+  enabled: true
+  modelName: parakeet
+power:
+  sleepPrevention: idle
+edit:
+  mode: hashline
+task:
+  eager: preferred
+modelRoles:
+  tiny: github-copilot/gpt-5.6-luna-utility
+  smol: github-copilot/gpt-5.6-luna
+  default: github-copilot/gpt-5.6-terra
+  slow: github-copilot/gpt-5.6-sol
+extendedContext: false
